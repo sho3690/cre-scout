@@ -1,0 +1,84 @@
+{
+ "株式会社ヨドコウ": {
+  "name": "株式会社ヨドコウ",
+  "listing": "上場",
+  "industry": "鉄鋼",
+  "region": "千葉県",
+  "url": "",
+  "memo": "EDINET DBから自動取得(2026-08-02, 2026年度有報ベース)。\n賃貸等不動産注記の含み益: 143.07億円\n有報テキストの検出: 資本効率: …から７％(2025年度)に改め、中長期的にさらなる資本効率の改善に向けて取り組みを進めてまいりました。「中期経営計画2025」の…",
+  "fin": {
+   "totalAssets": 266458.0,
+   "reBook": 37502.0,
+   "debtNote": ""
+  },
+  "properties": [
+   {
+    "type": "工場",
+    "location": "千葉県市川市(市川工場)",
+    "area": "175,883㎡",
+    "book": 7136.0,
+    "est": null,
+    "note": "EDINET DB(有報の設備状況)より"
+   },
+   {
+    "type": "自社ビル",
+    "location": "福井県坂井市(福井ヨドコウ㈱本社)",
+    "area": "124,427㎡",
+    "book": 6582.0,
+    "est": null,
+    "note": "EDINET DB(有報の設備状況)より"
+   },
+   {
+    "type": "工場",
+    "location": "広島県呉市(呉工場)",
+    "area": "137,601㎡",
+    "book": 3663.0,
+    "est": null,
+    "note": "EDINET DB(有報の設備状況)より"
+   },
+   {
+    "type": "工場",
+    "location": "大阪市西淀川区(大阪工場)",
+    "area": "199,178㎡",
+    "book": 2378.0,
+    "est": null,
+    "note": "EDINET DB(有報の設備状況)より"
+   },
+   {
+    "type": "自社ビル",
+    "location": "大阪市中央区(本社ビル)",
+    "area": "1,434㎡",
+    "book": 1202.0,
+    "est": null,
+    "note": "EDINET DB(有報の設備状況)より"
+   },
+   {
+    "type": "工場",
+    "location": "広島県呉市(ヨドコウ商事㈱呉工場)",
+    "area": "9,266㎡",
+    "book": 689.0,
+    "est": null,
+    "note": "EDINET DB(有報の設備状況)より"
+   }
+  ],
+  "signals": [
+   "cap_eff"
+  ],
+  "score": {
+   "needs": 0,
+   "value": 0,
+   "access": 0,
+   "timing": 0,
+   "profit": 0
+  },
+  "deal": {
+   "stage": 0,
+   "prob": 10,
+   "type": "未定",
+   "price": null,
+   "buyMargin": null,
+   "nextAction": "台帳情報の確認・スコアリング",
+   "nextDate": ""
+  }
+ }
+}

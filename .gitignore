@@ -1,0 +1,9 @@
+# 秘密鍵は絶対にコミットしない(公開リポジトリ)
+tools/edinet_key.txt
+tools/edinet_key_fsa.txt
+
+# ローカル生成物(サイトには不要)
+reports/
+tools/cache/auto.log
+.playwright-mcp/
+.DS_Store

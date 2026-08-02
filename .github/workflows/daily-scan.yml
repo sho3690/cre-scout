@@ -1,0 +1,40 @@
+name: daily-scan
+
+# 毎朝8:00(日本時間)に企業不動産データを自動更新する。
+# APIキーはリポジトリのSecrets(EDINETDB_API_KEY / EDINET_FSA_KEY)から渡す。
+on:
+  schedule:
+    - cron: "0 23 * * *" # 23:00 UTC = 8:00 JST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 含み益スクリーナー(EDINET DB・無料枠内で少しずつ全社調査)
+        env:
+          EDINETDB_API_KEY: ${{ secrets.EDINETDB_API_KEY }}
+        run: python3 tools/edinetdb_scan.py --screen
+
+      - name: 新着開示シグナル(公式EDINET・直近2日の有報等を検査)
+        env:
+          EDINET_FSA_KEY: ${{ secrets.EDINET_FSA_KEY }}
+        run: python3 tools/edinet_check.py --days 2 --no-pdf
+        continue-on-error: true
+
+      - name: データをコミットしてサイトに反映
+        run: |
+          git config user.name "cre-scout-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data tools/cache
+          git diff --cached --quiet || git commit -m "auto: daily data update"
+          git push
