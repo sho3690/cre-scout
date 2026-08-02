@@ -986,5 +986,70 @@
   "top_fac": "輸出梱包センター",
   "top_loc": "神奈川県横浜市金沢区",
   "checked": "2026-08-02"
+ },
+ "E04179": {
+  "name": "センコーグループホールディングス株式会社",
+  "industry": "陸運業",
+  "sec_code": "9069",
+  "land_book": 152788.0,
+  "total_book": 318740.0,
+  "gap": null,
+  "lease_book": null,
+  "n_fac": 30,
+  "top_fac": "本社",
+  "top_loc": "東京都江東区",
+  "checked": "2026-08-02"
+ },
+ "E04182": {
+  "name": "株式会社丸運",
+  "industry": "陸運業",
+  "sec_code": "9067",
+  "land_book": 16840.0,
+  "total_book": 20988.0,
+  "gap": null,
+  "lease_book": 338.0,
+  "n_fac": 14,
+  "top_fac": "仙台物流センター",
+  "top_loc": "宮城県仙台市宮城野区",
+  "checked": "2026-08-02"
+ },
+ "E04187": {
+  "name": "ヤマトホールディングス株式会社",
+  "industry": "陸運業",
+  "sec_code": "9064",
+  "land_book": 167225.0,
+  "total_book": 343601.0,
+  "gap": null,
+  "lease_book": null,
+  "n_fac": 32,
+  "top_fac": "ヤマトオートワークス四国㈱",
+  "top_loc": "香川県仲多度郡",
+  "checked": "2026-08-02"
+ },
+ "E04191": {
+  "name": "ニッコンホールディングス株式会社",
+  "industry": "陸運業",
+  "sec_code": "9072",
+  "land_book": 125222.0,
+  "total_book": 257455.0,
+  "gap": 5211.0,
+  "lease_book": 22823.0,
+  "n_fac": 13,
+  "top_fac": "本社他",
+  "top_loc": "東京都中央区他",
+  "checked": "2026-08-02"
+ },
+ "E04194": {
+  "name": "カンダホールディングス株式会社",
+  "industry": "陸運業",
+  "sec_code": "9059",
+  "land_book": 12181.0,
+  "total_book": 20692.0,
+  "gap": null,
+  "lease_book": null,
+  "n_fac": 12,
+  "top_fac": "堺物流センター",
+  "top_loc": "大阪府堺市堺区",
+  "checked": "2026-08-02"
  }
 }
