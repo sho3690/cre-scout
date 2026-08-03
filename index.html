@@ -78,7 +78,11 @@ a:hover { color: var(--primary); }
   position: sticky; top: 0; z-index: 40;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
+  transition: box-shadow .2s;
 }
+/* スクロールでコンテンツが下に潜るときは、影で「意図した重なり」に見せる */
+.app-header.scrolled { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.dark .app-header.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,.55); }
 .app-header::before { content: ""; display: block; height: 4px; background: var(--primary); }
 .dark .app-header::before { background: var(--accent); }
 @supports (backdrop-filter: blur(8px)) {
@@ -93,7 +97,7 @@ a:hover { color: var(--primary); }
 .brand h1 .brand-dot { color: var(--accent); }
 .brand-sub { font-size: .78rem; color: var(--text-muted); margin-top: 2px; }
 
-main { padding: 28px 0 64px; display: grid; gap: 24px; }
+main { padding: 36px 0 64px; display: grid; gap: 24px; }
 
 /* ============ ボタン(デジタル庁: セカンダリ=青枠) ============ */
 .btn {
@@ -690,6 +694,12 @@ const App = {
 window.addEventListener("keydown", e => {
   if (e.key === "Escape" && reportIdx !== null) App.closeReport();
 });
+
+// スクロールエッジ効果(ヘッダーとコンテンツの境界を影で表現)
+const headerEl = document.querySelector(".app-header");
+window.addEventListener("scroll", () => {
+  headerEl.classList.toggle("scrolled", window.scrollY > 4);
+}, { passive: true });
 
 (function initTheme() {
   let pref = null;
