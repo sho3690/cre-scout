@@ -143,6 +143,9 @@ main.container { padding: 40px 24px 64px; display: grid; gap: 24px; }
 .kw b { font-family: var(--font-mono); }
 .row-actions { display: flex; gap: 8px; justify-content: flex-end; align-items: center; flex-wrap: nowrap; }
 .row-actions .btn { white-space: nowrap; }
+.kw-more { font-size: .72rem; color: var(--text-muted); margin-left: 4px; }
+.dim { color: var(--text-muted); }
+.val { font-weight: 700; }
 a.btn { text-decoration: none; }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
 .btn svg { flex-shrink: 0; }
@@ -372,54 +375,38 @@ const leadTier = e => (e.sig && e.re && e.re.gap != null) ? 0 : e.sig ? 1 : 2;
 const ICON_DOC = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`;
 const ICON_REPORT = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>`;
 
-// 開示書類の種別に応じたボタンラベル(臨時報告書・半期報告書もあるため)
-function docLabel(e) {
-  const d = e.sig?.docDescription || "";
-  const m = d.match(/有価証券報告書|半期報告書|臨時報告書/);
-  return m ? m[0] : "有価証券報告書";
-}
-
 function renderList() {
   const el = $("listWrap");
   const pct = S?.total ? Math.round(S.scanned / S.total * 100) : 0;
   if (S) $("listDesc").textContent =
-    `開示シグナル(直近2週間)と含み益データを企業ごとに統合。両方が揃う企業ほど上位。` +
-    ` — 不動産データ調査済み ${S.scanned}/${S.total ?? "—"}社(${pct}%)・毎朝8:00自動更新`;
+    `狙い目順。調査済み ${S.scanned}/${(S.total ?? 0).toLocaleString("ja-JP")}社・毎朝更新。詳細は各社の「レポート」で。`;
   if (!LEADS.length) {
     el.innerHTML = `<div class="empty">まだデータがありません。毎朝8:00の自動調査をお待ちください。</div>`;
     return;
   }
   const rows = LEADS.map((e, i) => {
-    const kws = e.sig
-      ? Object.entries(e.sig.keywords || {}).sort((a, b) => b[1] - a[1]).slice(0, 5)
-          .map(([k, n]) => `<span class="kw">${esc(k)} <b>${n}</b></span>`).join("")
-      : "";
-    const subParts = [];
-    if (e.industry) subParts.push(esc(e.industry));
-    if (e.sig) subParts.push(`提出 ${esc(fmtDate(e.sig.submitDateTime))} — ${esc(trunc(e.sig.docDescription, 34))}`);
-    const re = e.re;
-    const reLine = re ? `<div class="re-line">${re.gap != null ? `含み益 <b>${fmtM(re.gap)}</b> / ` : ""}土地簿価 <b>${fmtM(re.land_book)}</b>${re.top_fac ? ` — ${esc(trunc(re.top_fac, 20))} ${esc(trunc(re.top_loc || "", 14))}${re.n_fac > 1 ? ` ほか${re.n_fac}件` : ""}` : ""}</div>` : "";
-    const docUrl = edinetPdf(e.sig?.docID || re?.doc_id);
+    const kwEntries = e.sig ? Object.entries(e.sig.keywords || {}).sort((a, b) => b[1] - a[1]) : [];
+    const topKw = kwEntries[0];
+    const docUrl = edinetPdf(e.sig?.docID || e.re?.doc_id);
     return `<tr>
       <td class="r num">${i + 1}</td>
-      <td>
-        <div class="cell-main">${esc(e.name)}${e.sec ? `<span class="chip">${esc(e.sec)}</span>` : ""}${leadTier(e) === 0 ? '<span class="tier-badge">シグナル+含み益</span>' : ""}</div>
-        ${subParts.length ? `<div class="cell-sub">${subParts.join(" / ")}</div>` : ""}
-        ${kws ? `<div style="margin-top:5px">${kws}</div>` : ""}
-        ${reLine}
-      </td>
+      <td><span class="cell-main">${esc(e.name)}</span>${e.sec ? `<span class="chip">${esc(e.sec)}</span>` : ""}${leadTier(e) === 0 ? '<span class="tier-badge">注目</span>' : ""}</td>
+      <td>${topKw
+        ? `<span class="kw">${esc(topKw[0])} <b>${topKw[1]}</b></span>${kwEntries.length > 1 ? `<span class="kw-more">+${kwEntries.length - 1}</span>` : ""}`
+        : '<span class="dim">—</span>'}</td>
+      <td class="r num val">${e.re?.gap != null ? fmtM(e.re.gap) : '<span class="dim">—</span>'}</td>
       <td class="r"><div class="row-actions">
         ${docUrl
-          ? `<a class="btn btn-sm" href="${docUrl}" target="_blank" rel="noopener" title="原典PDFを開く(EDINET)">${ICON_DOC}${docLabel(e)}</a>`
-          : `<button class="btn btn-sm" disabled title="書類IDは今後の自動調査で取得されます">${ICON_DOC}${docLabel(e)}</button>`}
-        <button class="btn btn-sm" onclick="App.openReport(${i})">${ICON_REPORT}レポート</button>
+          ? `<a class="btn btn-sm" href="${docUrl}" target="_blank" rel="noopener" title="原典の開示書類PDFを開く(EDINET)">${ICON_DOC}PDF</a>`
+          : `<button class="btn btn-sm" disabled title="書類IDは今後の自動調査で取得されます">${ICON_DOC}PDF</button>`}
+        <button class="btn btn-sm" onclick="App.openReport(${i})" title="選定理由レポートを開く">${ICON_REPORT}レポート</button>
       </div></td>
     </tr>`;
   }).join("");
   el.innerHTML = `
     <div class="progress" role="img" aria-label="不動産データ調査の進み具合 ${pct}%"><div style="width:${pct}%"></div></div>
     <div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th class="r">#</th><th>企業・根拠</th><th></th></tr></thead>
+      <thead><tr><th class="r">#</th><th>企業</th><th>シグナル</th><th class="r">含み益</th><th></th></tr></thead>
       <tbody>${rows}</tbody></table></div>`;
 }
 
