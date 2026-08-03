@@ -419,7 +419,7 @@ def esc(s):
 
 REPORT_CSS = """
   :root { --bg:#f8f9fa; --surface:#fff; --text:#212529; --sub:#6c757d; --border:#dee2e6;
-          --primary:#023e8a; --accent:#0077b6; --subtle:#caf0f8; }
+          --primary:#0017C1; --accent:#0031D8; --subtle:#E8F1FE; }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:"Hiragino Sans","Yu Gothic UI",system-ui,sans-serif; background:var(--bg);
          color:var(--text); font-size:14px; line-height:1.6; padding:40px 24px; }
