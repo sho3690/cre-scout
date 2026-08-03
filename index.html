@@ -193,6 +193,62 @@ main { padding: 28px 0 64px; display: grid; gap: 24px; }
 #main-content { animation: viewIn .18s ease; }
 @keyframes viewIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { #main-content { animation: none; } }
+
+/* ============ 統合リスト ============ */
+.tier-badge {
+  display: inline-flex; font-size: .6875rem; font-weight: 700;
+  padding: 1px 8px; border-radius: 999px; margin-left: 8px; vertical-align: 2px;
+  background: var(--primary); color: #fff;
+}
+.dark .tier-badge { background: var(--accent); color: #0b0c0f; }
+.re-line { font-size: .78rem; color: var(--text-secondary); margin-top: 5px; }
+.re-line b { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* ============ 選定理由レポート ============ */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(9,9,11,.5); z-index: 100;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 24px; overflow-y: auto;
+}
+.report-shell { max-width: 860px; width: 100%; }
+.report-actions { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 12px; }
+.report-actions .btn { background: var(--surface); }
+.report-sheet {
+  background: #fff; color: #1A1A1C; border-radius: 6px; box-shadow: var(--shadow-md);
+  padding: 40px 44px; font-size: 13.5px; line-height: 1.7;
+}
+.rs-band { display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 3px solid #0017C1; padding-bottom: 10px; margin-bottom: 14px; }
+.rs-title { font-size: 18px; font-weight: 700; color: #0017C1; }
+.rs-date { font-size: 11px; color: #757578; }
+.rs-company { font-size: 16px; font-weight: 700; }
+.rs-meta { font-size: 11.5px; color: #757578; margin-bottom: 16px; }
+.rs-sec { margin-bottom: 18px; }
+.rs-sec h4 { font-size: 12px; font-weight: 700; color: #0017C1;
+  border-left: 3px solid #0017C1; padding-left: 8px; margin-bottom: 8px; }
+.rs-sec p, .rs-sec li { color: #333; }
+.rs-sec ul { margin-left: 1.3em; }
+.rs-sec li { margin: 3px 0; }
+.rs-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 8px; }
+.rs-stat { border: 1px solid #D8D8DB; border-radius: 6px; padding: 8px 10px; }
+.rs-stat .l { font-size: 10px; color: #757578; }
+.rs-stat .v { font-size: 14px; font-weight: 700; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.rs-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.rs-table th { background: #E8E8EB; color: #414143; text-align: left; padding: 5px 9px; border: 1px solid #D8D8DB; }
+.rs-table td { padding: 5px 9px; border: 1px solid #D8D8DB; color: #333; }
+.rs-table .r { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.rs-snip { background: #F2F2F5; border-radius: 6px; padding: 8px 12px; font-size: 12px; color: #414143; margin-top: 6px; }
+.rs-foot { border-top: 1px solid #D8D8DB; margin-top: 16px; padding-top: 10px;
+  font-size: 10px; color: #757578; line-height: 1.7; }
+@media print {
+  body * { visibility: hidden; }
+  #reportRoot, #reportRoot * { visibility: visible; }
+  #reportRoot { position: absolute; inset: 0; }
+  .modal-backdrop { position: static; background: none; padding: 0; overflow: visible; }
+  .report-actions { display: none; }
+  .report-sheet { box-shadow: none; border-radius: 0; padding: 0; }
+}
+@page { size: A4; margin: 14mm; }
 </style>
 </head>
 <body>
@@ -209,16 +265,10 @@ main { padding: 28px 0 64px; display: grid; gap: 24px; }
 <main class="container" id="main-content">
   <div id="picksWrap"></div>
 
-  <section class="card" aria-labelledby="h-signals">
-    <h2 id="h-signals">新着開示シグナル</h2>
-    <p class="desc" id="signalsDesc">直近の有価証券報告書・臨時報告書で「減損損失」「閉鎖」「リースバック」等を検出(直近2週間 / 出典: EDINET)</p>
-    <div id="signalsWrap"></div>
-  </section>
-
-  <section class="card" aria-labelledby="h-ranking">
-    <h2 id="h-ranking">含み益ランキング(事業会社)</h2>
-    <p class="desc" id="rankingDesc">賃貸等不動産の含み益上位・不動産業を除く(出典: EDINET DB)</p>
-    <div id="rankingWrap"></div>
+  <section class="card" aria-labelledby="h-list">
+    <h2 id="h-list">発掘リスト</h2>
+    <p class="desc" id="listDesc">開示シグナル(直近2週間)と含み益データを企業ごとに統合。両方が揃う企業ほど上位に表示します。</p>
+    <div id="listWrap"></div>
   </section>
 
   <section class="card">
@@ -231,6 +281,8 @@ main { padding: 28px 0 64px; display: grid; gap: 24px; }
           投資信託・ファンド関連の開示は除外しています。</li>
         <li><b>含み益</b> — 有価証券報告書の「賃貸等不動産」注記にある
           <b>時価 − 帳簿価額</b>。開示している約2,000社が対象で、不動産業(プロの保有者)は除外しています。</li>
+        <li><b>並び順</b> — ①シグナル+含み益の両方が揃う企業 → ②シグナル検出企業(検出数順)
+          → ③含み益上位企業、の順。シグナル検出企業は不動産データを優先的に自動調査します。</li>
         <li>調査は無料APIの範囲で毎朝自動で進み、対象企業(約3,800社)を約40日で一巡します。</li>
         <li>数値は機械抽出の概算です。<b>商談前に必ず原典(EDINETの開示書類)を確認してください。</b></li>
       </ul>
@@ -243,6 +295,7 @@ main { padding: 28px 0 64px; display: grid; gap: 24px; }
   本サイトは公開情報の整理であり、売買の勧誘・助言ではありません。
 </footer>
 
+<div id="reportRoot"></div>
 <div id="toastRoot"></div>
 
 <script src="data/sourcing.js"></script>
@@ -281,9 +334,10 @@ function savePicks() {
   try { localStorage.setItem(PICKS_KEY, JSON.stringify(picks)); } catch {}
 }
 
-/* ============ データ整形 ============ */
+/* ============ データ整形(企業単位に統合) ============ */
 const D = window.CRE_DISCLOSURES;
 const S = window.CRE_SOURCING;
+const normName = s => String(s ?? "").replace(/[\s　]+/g, "");
 
 const seenFilers = new Set();
 const signals = (D?.hits || []).filter(h => {
@@ -292,9 +346,40 @@ const signals = (D?.hits || []).filter(h => {
   if (seenFilers.has(h.filerName)) return false;
   seenFilers.add(h.filerName);
   return true;
-}).slice(0, 20);
+}).slice(0, 25);
 
-const ranking = (S?.ranking || []).slice(0, 50);
+const rankingArr = S?.ranking || [];
+const matches = S?.matches || {};
+const dives = S?.dives || {};
+
+// シグナル企業と含み益企業を1本のリストにマージ
+const LEADS = (() => {
+  const out = [];
+  const used = new Set();
+  for (const h of signals) {
+    const re = matches[h.filerName]
+      || rankingArr.find(v => normName(v.name) === normName(h.filerName))
+      || null;
+    out.push({ name: h.filerName, sec: h.secCode || re?.sec_code || "",
+      industry: re?.industry || "", sig: h, re });
+    used.add(normName(h.filerName));
+  }
+  for (const v of rankingArr) {
+    if (used.has(normName(v.name))) continue;
+    out.push({ name: v.name, sec: v.sec_code || "", industry: v.industry || "",
+      sig: null, re: v });
+  }
+  // ①シグナル+含み益 → ②シグナルのみ(検出数順) → ③含み益のみ(含み益順)
+  const tier = e => (e.sig && e.re && e.re.gap != null) ? 0 : e.sig ? 1 : 2;
+  out.sort((a, b) => {
+    const t = tier(a) - tier(b);
+    if (t) return t;
+    if (tier(a) === 2) return (b.re?.gap ?? -1e15) - (a.re?.gap ?? -1e15);
+    return (b.sig?.total || 0) - (a.sig?.total || 0);
+  });
+  return out.slice(0, 60);
+})();
+const leadTier = e => (e.sig && e.re && e.re.gap != null) ? 0 : e.sig ? 1 : 2;
 
 /* ============ 描画 ============ */
 function renderPicks() {
@@ -318,67 +403,53 @@ function renderPicks() {
     </section>`;
 }
 
-function renderSignals() {
-  const el = $("signalsWrap");
-  if (D?.updated) $("signalsDesc").textContent =
-    `直近の有価証券報告書・臨時報告書で「減損損失」「閉鎖」「リースバック」等を検出(直近2週間 / 出典: EDINET) — 更新 ${D.updated}`;
-  if (!signals.length) {
-    el.innerHTML = `<div class="empty">直近2週間のシグナル検出はありません。毎朝8:00の自動調査をお待ちください。</div>`;
+function renderList() {
+  const el = $("listWrap");
+  const pct = S?.total ? Math.round(S.scanned / S.total * 100) : 0;
+  if (S) $("listDesc").textContent =
+    `開示シグナル(直近2週間)と含み益データを企業ごとに統合。両方が揃う企業ほど上位。` +
+    ` — 不動産データ調査済み ${S.scanned}/${S.total ?? "—"}社(${pct}%)・毎朝8:00自動更新`;
+  if (!LEADS.length) {
+    el.innerHTML = `<div class="empty">まだデータがありません。毎朝8:00の自動調査をお待ちください。</div>`;
     return;
   }
   const names = new Set(picks.map(p => p.name));
-  const rows = signals.map((h, i) => {
-    const kws = Object.entries(h.keywords || {}).sort((a, b) => b[1] - a[1]).slice(0, 5)
-      .map(([k, n]) => `<span class="kw">${esc(k)} <b>${n}</b></span>`).join("");
-    const snip = cleanSnippet(h.snippet);
+  const rows = LEADS.map((e, i) => {
+    const kws = e.sig
+      ? Object.entries(e.sig.keywords || {}).sort((a, b) => b[1] - a[1]).slice(0, 5)
+          .map(([k, n]) => `<span class="kw">${esc(k)} <b>${n}</b></span>`).join("")
+      : "";
+    const subParts = [];
+    if (e.industry) subParts.push(esc(e.industry));
+    if (e.sig) subParts.push(`提出 ${esc(fmtDate(e.sig.submitDateTime))} — ${esc(trunc(e.sig.docDescription, 34))}`);
+    const re = e.re;
+    const reLine = re ? `<div class="re-line">${re.gap != null ? `含み益 <b>${fmtM(re.gap)}</b> / ` : ""}土地簿価 <b>${fmtM(re.land_book)}</b>${re.top_fac ? ` — ${esc(trunc(re.top_fac, 20))} ${esc(trunc(re.top_loc || "", 14))}${re.n_fac > 1 ? ` ほか${re.n_fac}件` : ""}` : ""}</div>` : "";
     return `<tr>
-      <td class="num" style="white-space:nowrap">${esc(fmtDate(h.submitDateTime))}</td>
-      <td><div class="cell-main">${esc(h.filerName)}${h.secCode ? `<span class="chip">${esc(h.secCode)}</span>` : ""}</div>
-          <div class="cell-sub">${esc(h.docDescription)}</div>
-          <div style="margin-top:5px">${kws}</div>
-          ${snip ? `<div class="cell-sub" style="margin-top:4px">抜粋: ${esc(trunc(snip, 80))}</div>` : ""}</td>
-      <td class="r">${names.has(h.filerName)
-        ? '<span class="badge-added">リスト済</span>'
-        : `<button class="btn btn-sm" onclick="App.addSignal(${i})">リストに追加</button>`}</td>
+      <td class="r num">${i + 1}</td>
+      <td>
+        <div class="cell-main">${esc(e.name)}${e.sec ? `<span class="chip">${esc(e.sec)}</span>` : ""}${leadTier(e) === 0 ? '<span class="tier-badge">シグナル+含み益</span>' : ""}</div>
+        ${subParts.length ? `<div class="cell-sub">${subParts.join(" / ")}</div>` : ""}
+        ${kws ? `<div style="margin-top:5px">${kws}</div>` : ""}
+        ${reLine}
+      </td>
+      <td class="r" style="white-space:nowrap">
+        <button class="btn btn-sm btn-ghost" onclick="App.openReport(${i})">レポート</button>
+        ${names.has(e.name)
+          ? '<span class="badge-added">リスト済</span>'
+          : `<button class="btn btn-sm" onclick="App.addLead(${i})">リストに追加</button>`}
+      </td>
     </tr>`;
   }).join("");
-  el.innerHTML = `<div class="tbl-wrap"><table class="tbl">
-    <thead><tr><th>提出日</th><th>企業・検出内容</th><th></th></tr></thead>
-    <tbody>${rows}</tbody></table></div>`;
-}
-
-function renderRanking() {
-  const el = $("rankingWrap");
-  const pct = S?.total ? Math.round(S.scanned / S.total * 100) : 0;
-  if (S) $("rankingDesc").textContent =
-    `賃貸等不動産の含み益上位・不動産業を除く(出典: EDINET DB) — 調査済み ${S.scanned} / ${S.total ?? "—"}社(${pct}%)・毎朝自動で増えます`;
-  if (!ranking.length) {
-    el.innerHTML = `<div class="empty">ランキングはまだありません。毎朝8:00の自動調査をお待ちください。</div>`;
-    return;
-  }
-  const names = new Set(picks.map(p => p.name));
-  const rows = ranking.map((v, i) => `
-    <tr>
-      <td class="r num">${i + 1}</td>
-      <td><div class="cell-main">${esc(v.name)}${v.sec_code ? `<span class="chip">${esc(v.sec_code)}</span>` : ""}</div>
-          <div class="cell-sub">${esc(v.industry || "—")} / ${esc(trunc(v.top_fac || "", 22))} ${esc(trunc(v.top_loc || "", 16))}${v.n_fac > 1 ? ` ほか物件${v.n_fac}件` : ""}</div></td>
-      <td class="r num">${fmtM(v.gap)}</td>
-      <td class="r num">${fmtM(v.land_book)}</td>
-      <td class="r">${names.has(v.name)
-        ? '<span class="badge-added">リスト済</span>'
-        : `<button class="btn btn-sm" onclick="App.addRanking(${i})">リストに追加</button>`}</td>
-    </tr>`).join("");
   el.innerHTML = `
-    <div class="progress" role="img" aria-label="調査の進み具合 ${pct}%"><div style="width:${pct}%"></div></div>
+    <div class="progress" role="img" aria-label="不動産データ調査の進み具合 ${pct}%"><div style="width:${pct}%"></div></div>
     <div class="tbl-wrap"><table class="tbl">
-      <thead><tr><th class="r">#</th><th>企業</th><th class="r">含み益(注記)</th><th class="r">土地簿価</th><th></th></tr></thead>
+      <thead><tr><th class="r">#</th><th>企業・根拠</th><th></th></tr></thead>
       <tbody>${rows}</tbody></table></div>`;
 }
 
 function render() {
   renderPicks();
-  renderSignals();
-  renderRanking();
+  renderList();
 }
 
 /* ============ テーマ ============ */
@@ -393,29 +464,164 @@ function updateThemeButton() {
   btn.title = label;
 }
 
+/* ============ 選定理由レポート ============ */
+const ANGLES = [
+  [/リースバック/, "セール・アンド・リースバック(使用を継続しながら資産をオフバランス化)の提案余地"],
+  [/減損損失/, "減損計上済みの低稼働・遊休資産は追加の売却損が出にくく、切り離しを提案しやすい"],
+  [/閉鎖|統廃合|拠点統合/, "閉鎖・統合にともなう余剰拠点の売却ニーズ"],
+  [/本社移転/, "移転後の旧本社・旧拠点の処分ニーズ"],
+  [/撤退|事業再編|構造改革/, "撤退・再編対象の事業に紐づく不動産の整理"],
+  [/資本効率/, "資本効率(ROIC・PBR)改善の文脈での資産圧縮・含み益実現の提案"],
+];
+
+function reportParts(e) {
+  const reasons = [];
+  if (e.sig) {
+    const top = Object.entries(e.sig.keywords || {}).sort((a, b) => b[1] - a[1]);
+    const kwText = top.slice(0, 4).map(([k, n]) => `「${k}」×${n}`).join("、");
+    reasons.push(`${(e.sig.submitDateTime || "").slice(0, 10)}提出の「${e.sig.docDescription}」において、売却関連の語が計${e.sig.total}回検出された(${kwText})。`);
+  }
+  const re = e.re;
+  if (re && re.gap != null) {
+    reasons.push(`賃貸等不動産注記では、簿価${fmtM(re.lease_book)}に対し含み益${fmtM(re.gap)}${re.fv_ratio ? `(時価は簿価の約${re.fv_ratio}倍)` : ""}が開示されている。`);
+  }
+  if (re) {
+    reasons.push(`BS上の土地簿価は${fmtM(re.land_book)}、設備簿価計${fmtM(re.total_book)}。主要物件は${re.top_fac || "—"}(${re.top_loc || "—"})${re.n_fac > 1 ? `ほか計${re.n_fac}件` : ""}。`);
+  }
+  const kwAll = e.sig ? Object.keys(e.sig.keywords || {}).join(" ") : "";
+  const angles = ANGLES.filter(([rx]) => rx.test(kwAll)).map(([, t]) => t);
+  if (re && (re.gap || 0) >= 1000) angles.push("大きな含み益の実現(売却益の計上)による財務体質改善・株主還元原資の創出");
+  if (!angles.length) angles.push("保有不動産の現状確認と、保有・賃貸・売却・セール・アンド・リースバックの選択肢比較");
+  const dive = dives[e.name] || null;
+  return { reasons, angles, dive };
+}
+
+function reportHTML(e) {
+  const { reasons, angles, dive } = reportParts(e);
+  const today = new Date();
+  const dateJa = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+  const sigRows = e.sig
+    ? Object.entries(e.sig.keywords || {}).sort((a, b) => b[1] - a[1])
+        .map(([k, n]) => `<tr><td>${esc(k)}</td><td class="r">${n}</td></tr>`).join("")
+    : "";
+  const snip = e.sig ? cleanSnippet(e.sig.snippet) : "";
+  const re = e.re;
+  const props = (dive?.properties || []).slice(0, 6).map(p => `
+    <tr><td>${esc(p.type)}</td><td>${esc(p.location)}</td>
+    <td class="r">${esc(p.area || "—")}</td><td class="r">${fmtM(p.book)}</td></tr>`).join("");
+  return `
+    <div class="rs-band"><span class="rs-title">候補企業レポート</span><span class="rs-date">作成日: ${dateJa} / CRE Scout(自動生成)</span></div>
+    <div class="rs-company">${esc(e.name)}${e.sec ? ` <span style="font-weight:400;color:#757578">(証券コード ${esc(e.sec)})</span>` : ""}</div>
+    <div class="rs-meta">${esc(e.industry || "業種不明")}${e.sig ? ` / 根拠開示: ${esc(e.sig.docDescription)}(EDINET 書類ID ${esc(e.sig.docID)})` : ""}</div>
+
+    <div class="rs-sec"><h4>01 選定理由</h4>
+      <ul>${reasons.map(r => `<li>${esc(r)}</li>`).join("")}</ul></div>
+
+    ${re ? `<div class="rs-sec"><h4>02 不動産データ(有価証券報告書より機械抽出)</h4>
+      <div class="rs-stats">
+        <div class="rs-stat"><div class="l">含み益(賃貸等不動産注記)</div><div class="v">${fmtM(re.gap)}</div></div>
+        <div class="rs-stat"><div class="l">注記簿価</div><div class="v">${fmtM(re.lease_book)}</div></div>
+        <div class="rs-stat"><div class="l">土地簿価(BS)</div><div class="v">${fmtM(re.land_book)}</div></div>
+        <div class="rs-stat"><div class="l">設備簿価計</div><div class="v">${fmtM(re.total_book)}</div></div>
+      </div>
+      ${props ? `<table class="rs-table"><thead><tr><th>種別(推定)</th><th>物件・所在地</th><th class="r">面積</th><th class="r">帳簿価額</th></tr></thead><tbody>${props}</tbody></table>` : ""}
+    </div>` : ""}
+
+    ${e.sig ? `<div class="rs-sec"><h4>${re ? "03" : "02"} 開示シグナルの内訳</h4>
+      <table class="rs-table"><thead><tr><th>検出キーワード</th><th class="r">出現回数</th></tr></thead>
+      <tbody>${sigRows}</tbody></table>
+      ${snip ? `<div class="rs-snip">本文抜粋: …${esc(trunc(snip, 160))}…</div>` : ""}</div>` : ""}
+
+    <div class="rs-sec"><h4>${e.sig && re ? "04" : "03"} 想定される提案の切り口</h4>
+      <ul>${angles.map(a => `<li>${esc(a)}</li>`).join("")}</ul></div>
+
+    <div class="rs-sec"><h4>${e.sig && re ? "05" : "04"} 商談前に確認すべきこと</h4>
+      <ul>
+        <li>EDINETの原典${e.sig ? `(書類ID ${esc(e.sig.docID)})` : ""}で該当記載の文脈を確認する</li>
+        <li>対象不動産の特定(登記事項・所在地・公示地価・現地の状況)</li>
+        <li>決算期・借換え・中期経営計画などのタイミング要素</li>
+        <li>未公表情報に触れない(本レポートは公開開示のみに基づく)</li>
+      </ul></div>
+
+    <div class="rs-foot">本レポートは公開情報(EDINET / EDINET DB)の機械抽出により自動生成された参考資料です。
+    数値は概算であり、正確性を保証しません。売買の勧誘・投資助言ではありません。
+    商談化の際はインサイダー情報の取扱いにご注意ください。</div>`;
+}
+
+function reportText(e) {
+  const { reasons, angles } = reportParts(e);
+  const re = e.re;
+  const lines = [
+    `【候補企業レポート】${e.name}${e.sec ? `(${e.sec})` : ""}`,
+    e.industry ? `業種: ${e.industry}` : "",
+    "",
+    "■選定理由",
+    ...reasons.map(r => `・${r}`),
+    "",
+  ];
+  if (re) lines.push("■不動産データ",
+    `・含み益: ${fmtM(re.gap)} / 注記簿価: ${fmtM(re.lease_book)} / 土地簿価: ${fmtM(re.land_book)} / 設備簿価計: ${fmtM(re.total_book)}`, "");
+  if (e.sig) lines.push("■開示シグナル",
+    `・${Object.entries(e.sig.keywords || {}).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}×${n}`).join("、")}`,
+    `・出典: ${e.sig.docDescription}(EDINET ${e.sig.docID})`, "");
+  lines.push("■提案の切り口", ...angles.map(a => `・${a}`), "",
+    "※公開情報の機械抽出による自動生成。数値は概算・要原典確認。");
+  return lines.filter(l => l !== null).join("\n");
+}
+
 /* ============ 操作 ============ */
 let toastTimer = null;
+let reportIdx = null;
 const App = {
-  addSignal(i) {
-    const h = signals[i];
-    if (!h || picks.some(p => p.name === h.filerName)) return;
-    const kwText = Object.entries(h.keywords || {}).sort((a, b) => b[1] - a[1])
-      .map(([k, n]) => `${k}×${n}`).join("、");
-    picks.push({ name: h.filerName, sec: h.secCode || "", type: "新着開示",
-      signal: kwText, detail: h.docDescription || "",
-      date: (h.submitDateTime || "").slice(0, 10), source: `EDINET ${h.docID}` });
+  addLead(i) {
+    const e = LEADS[i];
+    if (!e || picks.some(p => p.name === e.name)) return;
+    const parts = [];
+    if (e.sig) parts.push(Object.entries(e.sig.keywords || {}).sort((a, b) => b[1] - a[1])
+      .map(([k, n]) => `${k}×${n}`).join("、"));
+    if (e.re?.gap != null) parts.push(`含み益 ${fmtM(e.re.gap)}`);
+    if (e.re) parts.push(`土地簿価 ${fmtM(e.re.land_book)}`);
+    picks.push({
+      name: e.name, sec: e.sec,
+      type: leadTier(e) === 0 ? "シグナル+含み益" : e.sig ? "新着開示" : "含み益",
+      signal: parts.join(" / "),
+      detail: [e.industry, e.sig?.docDescription,
+        e.re?.top_fac ? `${e.re.top_fac} ${e.re.top_loc || ""}` : ""].filter(Boolean).join(" / "),
+      date: e.sig ? (e.sig.submitDateTime || "").slice(0, 10) : (e.re?.checked || ""),
+      source: [e.sig ? `EDINET ${e.sig.docID}` : "", e.re ? "EDINET DB" : ""].filter(Boolean).join(" / "),
+    });
     savePicks(); render();
-    this.toast(`「${h.filerName}」を候補リストに追加しました`);
+    this.toast(`「${e.name}」を候補リストに追加しました`);
   },
-  addRanking(i) {
-    const v = ranking[i];
-    if (!v || picks.some(p => p.name === v.name)) return;
-    picks.push({ name: v.name, sec: v.sec_code || "", type: "含み益",
-      signal: `含み益 ${fmtM(v.gap)} / 土地簿価 ${fmtM(v.land_book)}`,
-      detail: `${v.industry || ""} / ${v.top_fac || ""} ${v.top_loc || ""}${v.n_fac > 1 ? ` ほか物件${v.n_fac}件` : ""}`,
-      date: v.checked || "", source: "EDINET DB(有報の賃貸等不動産注記)" });
-    savePicks(); render();
-    this.toast(`「${v.name}」を候補リストに追加しました`);
+  openReport(i) {
+    const e = LEADS[i];
+    if (!e) return;
+    reportIdx = i;
+    $("reportRoot").innerHTML = `
+      <div class="modal-backdrop" onclick="if(event.target===this)App.closeReport()">
+        <div class="report-shell" role="dialog" aria-modal="true" aria-label="${esc(e.name)}の選定理由レポート">
+          <div class="report-actions">
+            <button class="btn btn-sm" onclick="App.copyReportText()">テキストをコピー</button>
+            <button class="btn btn-sm btn-primary" onclick="window.print()">印刷・PDF保存</button>
+            <button class="btn btn-sm" onclick="App.closeReport()">閉じる</button>
+          </div>
+          <div class="report-sheet">${reportHTML(e)}</div>
+        </div>
+      </div>`;
+    document.querySelector(".report-actions .btn")?.focus();
+  },
+  closeReport() { reportIdx = null; $("reportRoot").innerHTML = ""; },
+  async copyReportText() {
+    const e = LEADS[reportIdx];
+    if (!e) return;
+    const text = reportText(e);
+    try { await navigator.clipboard.writeText(text); }
+    catch {
+      const ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta);
+      ta.select(); document.execCommand("copy"); ta.remove();
+    }
+    this.toast("レポートをテキストでコピーしました");
   },
   removePick(i) {
     picks.splice(i, 1);
@@ -467,6 +673,10 @@ const App = {
 };
 
 /* ============ 初期化 ============ */
+window.addEventListener("keydown", e => {
+  if (e.key === "Escape" && reportIdx !== null) App.closeReport();
+});
+
 (function initTheme() {
   let pref = null;
   try { pref = localStorage.getItem(THEME_KEY); } catch {}

@@ -37,6 +37,7 @@ CACHE_DIR = TOOL_DIR / "cache"
 RE_CACHE = CACHE_DIR / "realestate_cache.json"
 CO_CACHE = CACHE_DIR / "companies_cache.json"
 DIVES_CACHE = CACHE_DIR / "dives.json"
+DISCLOSURE_HITS = CACHE_DIR / "disclosure_hits.json"
 USAGE_FILE = CACHE_DIR / "usage.json"
 REPORT_DIR = ROOT / "reports"
 DATA_DIR = ROOT / "data"
@@ -350,6 +351,16 @@ def industry_rank(industry: str) -> int:
         return len(PRIORITY_INDUSTRIES)
 
 
+def norm_name(s: str) -> str:
+    return re.sub(r"[\s　]+", "", str(s or ""))
+
+
+def signal_filer_names() -> set:
+    """開示シグナルで検出済みの企業名(正規化済み)"""
+    hits = load_json(DISCLOSURE_HITS, {})
+    return {norm_name(v.get("filerName")) for v in hits.values()}
+
+
 def screen():
     companies = all_companies()
     if not companies:
@@ -357,7 +368,10 @@ def screen():
         return
     cache = load_json(RE_CACHE, {})
     todo = [c for c in companies if c.get("edinet_code") and c["edinet_code"] not in cache]
-    todo.sort(key=lambda c: (industry_rank(c.get("industry", "")), c.get("edinet_code")))
+    # 開示シグナルが出た企業を最優先で調べる(統合リストで両データが揃うように)
+    sig_names = signal_filer_names()
+    todo.sort(key=lambda c: (0 if norm_name(c.get("name")) in sig_names else 1,
+                             industry_rank(c.get("industry", "")), c.get("edinet_code")))
     print(f"調査済み {len(cache)}社 / 未調査 {len(todo)}社 / 本日の残り枠 {BUDGET.remaining}回")
 
     n = 0
@@ -382,6 +396,7 @@ def screen():
             "sec_code": (c.get("sec_code") or "")[:4],
             "land_book": land, "total_book": total,
             "gap": lease.get("gap"), "lease_book": lease.get("book"),
+            "fv_ratio": lease.get("fv_ratio"),
             "n_fac": len(facilities),
             "top_fac": (facilities[0].get("name") if facilities else ""),
             "top_loc": (facilities[0].get("location_raw") if facilities else ""),
@@ -530,13 +545,23 @@ def export_sourcing_js():
     dives = load_json(DIVES_CACHE, {})
     with_gap = sorted([v for v in cache.values() if v.get("gap") is not None],
                       key=lambda v: -v["gap"])
-    ranking = [{**v, "top_fac": FOOTNOTE_RE.sub("", str(v.get("top_fac") or "")).strip()}
-               for v in with_gap if v.get("industry") != "不動産業"][:100]
+    clean = lambda v: {**v, "top_fac": FOOTNOTE_RE.sub("", str(v.get("top_fac") or "")).strip()}
+    ranking = [clean(v) for v in with_gap if v.get("industry") != "不動産業"][:100]
+    # 開示シグナル企業の不動産データ(統合リスト用・企業名で引けるようにする)
+    hits = load_json(DISCLOSURE_HITS, {})
+    by_norm = {norm_name(v.get("name")): v for v in cache.values()}
+    matches = {}
+    for h in hits.values():
+        filer = h.get("filerName") or ""
+        v = by_norm.get(norm_name(filer))
+        if v:
+            matches[filer] = clean(v)
     payload = {
         "updated": dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
         "scanned": len(cache),
         "total": len(load_json(CO_CACHE, []) or []) or None,
         "ranking": ranking,
+        "matches": matches,
         "dives": dives,
     }
     DATA_DIR.mkdir(parents=True, exist_ok=True)
