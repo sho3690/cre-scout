@@ -74,30 +74,20 @@ a { color: var(--accent-strong); text-decoration: underline; text-underline-offs
 a:hover { color: var(--primary); }
 
 /* ============ ヘッダー ============ */
+/* ヘッダーは固定しない: 固定するとスクロール時に必ずコンテンツの枠線と接触するため */
 .app-header {
-  position: sticky; top: 0; z-index: 40;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  transition: box-shadow .2s;
 }
-/* スクロールでコンテンツが下に潜るときは、影で「意図した重なり」に見せる */
-.app-header.scrolled { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
-.dark .app-header.scrolled { box-shadow: 0 4px 20px rgba(0,0,0,.55); }
 .app-header::before { content: ""; display: block; height: 4px; background: var(--primary); }
 .dark .app-header::before { background: var(--accent); }
-@supports (backdrop-filter: blur(8px)) {
-  .app-header {
-    background: color-mix(in srgb, var(--surface) 86%, transparent);
-    backdrop-filter: saturate(160%) blur(14px);
-    -webkit-backdrop-filter: saturate(160%) blur(14px);
-  }
-}
 .header-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0; }
 .brand h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: .01em; line-height: 1.2; }
 .brand h1 .brand-dot { color: var(--accent); }
 .brand-sub { font-size: .78rem; color: var(--text-muted); margin-top: 2px; }
 
-main { padding: 36px 0 64px; display: grid; gap: 24px; }
+/* .container(padding: 0 24px)より詳細度を上げないと上下余白が消えるので注意 */
+main.container { padding: 40px 24px 64px; display: grid; gap: 24px; }
 
 /* ============ ボタン(デジタル庁: セカンダリ=青枠) ============ */
 .btn {
@@ -694,12 +684,6 @@ const App = {
 window.addEventListener("keydown", e => {
   if (e.key === "Escape" && reportIdx !== null) App.closeReport();
 });
-
-// スクロールエッジ効果(ヘッダーとコンテンツの境界を影で表現)
-const headerEl = document.querySelector(".app-header");
-window.addEventListener("scroll", () => {
-  headerEl.classList.toggle("scrolled", window.scrollY > 4);
-}, { passive: true });
 
 (function initTheme() {
   let pref = null;
