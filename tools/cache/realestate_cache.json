@@ -605,10 +605,12 @@
   "total_book": 906146.0,
   "gap": 93299.0,
   "lease_book": 174075.0,
+  "fv_ratio": 1.54,
+  "doc_id": "S100YIM7",
   "n_fac": 38,
   "top_fac": "喜多見検車区",
   "top_loc": "東京都世田谷区",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04089": {
   "name": "京浜急行電鉄株式会社",
@@ -618,10 +620,12 @@
   "total_book": 491694.0,
   "gap": 266922.0,
   "lease_book": 113750.0,
+  "fv_ratio": 3.35,
+  "doc_id": "S100YK5J",
   "n_fac": 23,
   "top_fac": "新町検車区",
   "top_loc": "神奈川県横浜市",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04090": {
   "name": "東急株式会社",
@@ -631,10 +635,12 @@
   "total_book": 1570419.0,
   "gap": 855687.0,
   "lease_book": 587706.0,
+  "fv_ratio": 2.46,
+  "doc_id": "S100YE63",
   "n_fac": 1,
-  "top_fac": "＊１：車庫及び工場として、下之郷技術区",
+  "top_fac": "：車庫及び工場として、下之郷技術区",
   "top_loc": "長野県上田市",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04091": {
   "name": "京成電鉄株式会社",
@@ -644,10 +650,12 @@
   "total_book": 589905.0,
   "gap": 139992.0,
   "lease_book": 206525.0,
+  "fv_ratio": 1.68,
+  "doc_id": "S100YL5Y",
   "n_fac": 33,
   "top_fac": "高砂車庫",
   "top_loc": "東京都葛飾区",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04092": {
   "name": "京王電鉄株式会社",
@@ -657,10 +665,12 @@
   "total_book": 543846.0,
   "gap": 120448.0,
   "lease_book": 154535.0,
+  "fv_ratio": 1.78,
+  "doc_id": "S100YF0G",
   "n_fac": 41,
   "top_fac": "京王線若葉台車両基地",
   "top_loc": "東京都稲城市",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04093": {
   "name": "富士急行株式会社",
@@ -683,10 +693,12 @@
   "total_book": 1229716.0,
   "gap": 89048.0,
   "lease_book": 171336.0,
+  "fv_ratio": 1.52,
+  "doc_id": "S100Y8FK",
   "n_fac": 10,
   "top_fac": "以外からの主な賃借建物として、ＧＬＰ三郷Ⅲ",
   "top_loc": "埼玉県三郷市",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04097": {
   "name": "相鉄ホールディングス株式会社",
@@ -696,10 +708,12 @@
   "total_book": 465975.0,
   "gap": 173650.0,
   "lease_book": 287048.0,
+  "fv_ratio": 1.6,
+  "doc_id": "S100YFL1",
   "n_fac": 7,
   "top_fac": "かしわ台車両センター",
   "top_loc": "神奈川県海老名市",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04101": {
   "name": "名古屋鉄道株式会社",
@@ -709,10 +723,12 @@
   "total_book": 815723.0,
   "gap": 70051.0,
   "lease_book": 244785.0,
+  "fv_ratio": 1.29,
+  "doc_id": "S100YHOL",
   "n_fac": 32,
   "top_fac": "舞木検査場",
   "top_loc": "愛知県岡崎市",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04102": {
   "name": "近鉄グループホールディングス株式会社",
@@ -722,10 +738,12 @@
   "total_book": 1296016.0,
   "gap": 55100.0,
   "lease_book": 286056.0,
+  "fv_ratio": 1.19,
+  "doc_id": "S100YCLR",
   "n_fac": 4,
   "top_fac": "における線路及び電路施設",
   "top_loc": "生駒起点0.0kmから1.2kmまでの区間を除く。",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04103": {
   "name": "阪急阪神ホールディングス株式会社",
@@ -735,10 +753,12 @@
   "total_book": 1686523.0,
   "gap": 664260.0,
   "lease_book": 925891.0,
+  "fv_ratio": 1.72,
+  "doc_id": "S100YCBL",
   "n_fac": 2,
   "top_fac": "変電所は、第3種鉄道事業者",
   "top_loc": "神戸高速鉄道㈱",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04105": {
   "name": "京阪ホールディングス株式会社",
@@ -748,10 +768,12 @@
   "total_book": 498656.0,
   "gap": 149873.0,
   "lease_book": 229725.0,
+  "fv_ratio": 1.65,
+  "doc_id": "S100YCVR",
   "n_fac": 20,
   "top_fac": "京阪電気鉄道㈱    寝屋川車庫・寝屋川車両工場",
   "top_loc": "大阪府寝屋川市",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04106": {
   "name": "株式会社ＮＡＮＫＡＩ",
@@ -761,10 +783,12 @@
   "total_book": 730562.0,
   "gap": 138959.0,
   "lease_book": 402504.0,
+  "fv_ratio": 1.35,
+  "doc_id": "S100YBA0",
   "n_fac": 2,
   "top_fac": "線営業キロには、第二種鉄道事業2.0㎞（県社分界点",
   "top_loc": "旧久保町",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04108": {
   "name": "京福電気鉄道株式会社",
@@ -800,10 +824,12 @@
   "total_book": 424973.0,
   "gap": 37964.0,
   "lease_book": 53789.0,
+  "fv_ratio": 1.71,
+  "doc_id": "S100YAAB",
   "n_fac": 7,
   "top_fac": "筑紫工場筑紫車庫",
   "top_loc": "福岡県筑紫野市",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04123": {
   "name": "広島電鉄株式会社",
@@ -813,10 +839,12 @@
   "total_book": 65669.0,
   "gap": 15259.0,
   "lease_book": 29669.0,
+  "fv_ratio": 1.51,
+  "doc_id": "S100YI48",
   "n_fac": 1,
   "top_fac": "ひろしまゲートパーク",
   "top_loc": "旧広島市民球場跡地",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04125": {
   "name": "山陽電気鉄道株式会社",
@@ -852,10 +880,12 @@
   "total_book": 6892898.0,
   "gap": 2085379.0,
   "lease_book": 1445420.0,
+  "fv_ratio": 2.44,
+  "doc_id": "S100YC7N",
   "n_fac": 3,
   "top_fac": "日光線",
   "top_loc": "宇都宮",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04148": {
   "name": "西日本旅客鉄道株式会社",
@@ -865,10 +895,12 @@
   "total_book": 2184179.0,
   "gap": 479331.0,
   "lease_book": 530667.0,
+  "fv_ratio": 1.9,
+  "doc_id": "S100YCFK",
   "n_fac": 22,
   "top_fac": "立行政法人日本高速道路保有・債務返済機構本四備讃線",
   "top_loc": "茶屋町～児島間12.9㎞",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04149": {
   "name": "東海旅客鉄道株式会社",
@@ -891,10 +923,12 @@
   "total_book": 1197682.0,
   "gap": 65004.0,
   "lease_book": 98076.0,
+  "fv_ratio": 1.66,
+  "doc_id": "S100YHLQ",
   "n_fac": 45,
   "top_fac": "銀座線上野車両基地",
   "top_loc": "東京都台東区",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04154": {
   "name": "株式会社西武ホールディングス",
@@ -904,10 +938,12 @@
   "total_book": 1076749.0,
   "gap": 154959.0,
   "lease_book": 199106.0,
+  "fv_ratio": 1.78,
+  "doc_id": "S100YEFI",
   "n_fac": 57,
   "top_fac": "㈱西武不動産ダイヤゲート池袋",
   "top_loc": "東京都豊島区",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04155": {
   "name": "新潟交通株式会社",
@@ -930,10 +966,12 @@
   "total_book": 70935.0,
   "gap": 28472.0,
   "lease_book": 44001.0,
+  "fv_ratio": 1.65,
+  "doc_id": "S100YF1P",
   "n_fac": 23,
   "top_fac": "本社",
   "top_loc": "神奈川県横浜市鶴見区",
-  "checked": "2026-08-02"
+  "checked": "2026-08-03"
  },
  "E04159": {
   "name": "大和自動車交通株式会社",
@@ -1061,6 +1099,7 @@
   "gap": null,
   "lease_book": null,
   "fv_ratio": null,
+  "doc_id": "S100YLZQ",
   "n_fac": 8,
   "top_fac": "〕店舗他       店舗等",
   "top_loc": "東京都港区高輪",
@@ -1075,6 +1114,7 @@
   "gap": null,
   "lease_book": null,
   "fv_ratio": null,
+  "doc_id": "S100YI10",
   "n_fac": 1,
   "top_fac": "本社",
   "top_loc": "福岡県春日市",
@@ -1089,6 +1129,7 @@
   "gap": null,
   "lease_book": null,
   "fv_ratio": null,
+  "doc_id": "S100YTII",
   "n_fac": 38,
   "top_fac": "㈱歯愛メディカル本社ロジスティクスセンター",
   "top_loc": "石川県能美市",
@@ -1103,6 +1144,7 @@
   "gap": null,
   "lease_book": null,
   "fv_ratio": null,
+  "doc_id": "S100XR1L",
   "n_fac": 1,
   "top_fac": "本社他",
   "top_loc": "東京都港区他",
@@ -1117,6 +1159,7 @@
   "gap": null,
   "lease_book": null,
   "fv_ratio": null,
+  "doc_id": "S100XNNG",
   "n_fac": 5,
   "top_fac": "本社及び本社工場",
   "top_loc": "長野県上田市",
@@ -1131,6 +1174,7 @@
   "gap": null,
   "lease_book": null,
   "fv_ratio": null,
+  "doc_id": "S100WRTP",
   "n_fac": 2,
   "top_fac": "本社",
   "top_loc": "東京都港区",
@@ -1145,6 +1189,7 @@
   "gap": null,
   "lease_book": null,
   "fv_ratio": null,
+  "doc_id": "S100YDYC",
   "n_fac": 3,
   "top_fac": "成田ゲートウェイホテル㈱成田ゲートウェイホテル",
   "top_loc": "千葉県成田市",
@@ -1159,6 +1204,7 @@
   "gap": null,
   "lease_book": null,
   "fv_ratio": null,
+  "doc_id": "S100YF8Q",
   "n_fac": 8,
   "top_fac": "本社工場",
   "top_loc": "三重県 松阪市",
@@ -1173,6 +1219,7 @@
   "gap": null,
   "lease_book": null,
   "fv_ratio": null,
+  "doc_id": "S100YEOH",
   "n_fac": 22,
   "top_fac": "北陸センター",
   "top_loc": "石川県小松市",
@@ -1187,6 +1234,7 @@
   "gap": 29.3,
   "lease_book": 38.5,
   "fv_ratio": 1.76,
+  "doc_id": "S100YBI7",
   "n_fac": 1,
   "top_fac": "本社",
   "top_loc": "名古屋市中区",
@@ -1201,6 +1249,7 @@
   "gap": 4630.2,
   "lease_book": 11620.8,
   "fv_ratio": 1.4,
+  "doc_id": "S100YTD8",
   "n_fac": 8,
   "top_fac": "賃貸用事務所・マンション",
   "top_loc": "名古屋市中川区他",
@@ -1215,6 +1264,7 @@
   "gap": null,
   "lease_book": null,
   "fv_ratio": null,
+  "doc_id": "S100XUA7",
   "n_fac": 26,
   "top_fac": "大塚製薬㈱徳島工場",
   "top_loc": "徳島県徳島市",
@@ -1229,6 +1279,7 @@
   "gap": 59.3,
   "lease_book": 741.7,
   "fv_ratio": 1.08,
+  "doc_id": "S100YIOE",
   "n_fac": 12,
   "top_fac": "クリアル㈱本社",
   "top_loc": "東京都港区",
@@ -1271,6 +1322,7 @@
   "gap": 16720.0,
   "lease_book": 20190.0,
   "fv_ratio": 1.83,
+  "doc_id": "S100YI52",
   "n_fac": 122,
   "top_fac": "九州西濃運輸㈱本社及び福岡支店",
   "top_loc": "福岡市博多区",

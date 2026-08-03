@@ -361,6 +361,63 @@ def signal_filer_names() -> set:
     return {norm_name(v.get("filerName")) for v in hits.values()}
 
 
+def scan_company(code: str, meta: dict) -> dict | None:
+    """1社の不動産データを取得してキャッシュ用エントリを作る(API 1回)"""
+    re_data = api(f"/companies/{code}/real-estate")
+    if re_data is None:
+        return None
+    facilities = dedupe_facilities((re_data or {}).get("facilities"))
+    note = latest_note(re_data or {})
+    lease = extract_lease(re_data or {})
+    bs = note_bs(re_data or {})
+    land = bs.get("land_m_yen")
+    if not isinstance(land, (int, float)):
+        land = round(sum(f.get("book_value_land_m_yen") or 0 for f in facilities), 1)
+    total = bs.get("real_estate_total_m_yen")
+    if not isinstance(total, (int, float)):
+        total = round(sum(f.get("book_value_total_m_yen") or 0 for f in facilities), 1)
+    doc_id = ((note.get("lease_disclosure") or {}).get("doc_id")
+              or (facilities[0].get("doc_id") if facilities else None))
+    return {
+        "name": meta.get("name"), "industry": meta.get("industry") or "",
+        "sec_code": (meta.get("sec_code") or "")[:4],
+        "land_book": land, "total_book": total,
+        "gap": lease.get("gap"), "lease_book": lease.get("book"),
+        "fv_ratio": lease.get("fv_ratio"),
+        "doc_id": doc_id,
+        "n_fac": len(facilities),
+        "top_fac": (facilities[0].get("name") if facilities else ""),
+        "top_loc": (facilities[0].get("location_raw") if facilities else ""),
+        "checked": dt.date.today().isoformat(),
+    }
+
+
+def refresh_top(n: int):
+    """シグナル該当社+ランキング上位N社のデータを取り直す(doc_id等の新項目を反映)"""
+    cache = load_json(RE_CACHE, {})
+    sig_names = signal_filer_names()
+    targets = [code for code, v in cache.items() if norm_name(v.get("name")) in sig_names]
+    ranked = sorted([(code, v) for code, v in cache.items()
+                     if v.get("gap") is not None and v.get("industry") != "不動産業"],
+                    key=lambda cv: -cv[1]["gap"])
+    for code, _ in ranked[:n]:
+        if code not in targets:
+            targets.append(code)
+    print(f"データ取り直し: {len(targets)}社(シグナル該当+ランキング上位{n})")
+    done = 0
+    for code in targets:
+        if BUDGET.remaining <= 0:
+            print("※ 本日の枠を使い切ったため中断(明日の自動実行で続きます)")
+            break
+        entry = scan_company(code, cache[code])
+        if entry is None:
+            break
+        cache[code] = entry
+        done += 1
+    save_json(RE_CACHE, cache)
+    print(f"{done}社を更新しました")
+
+
 def screen():
     companies = all_companies()
     if not companies:
@@ -378,30 +435,10 @@ def screen():
     for c in todo:
         if BUDGET.remaining <= 0:
             break
-        code = c["edinet_code"]
-        re_data = api(f"/companies/{code}/real-estate")
-        if re_data is None:
+        entry = scan_company(c["edinet_code"], c)
+        if entry is None:
             break
-        facilities = dedupe_facilities((re_data or {}).get("facilities"))
-        lease = extract_lease(re_data or {})
-        bs = note_bs(re_data or {})
-        land = bs.get("land_m_yen")
-        if not isinstance(land, (int, float)):
-            land = round(sum(f.get("book_value_land_m_yen") or 0 for f in facilities), 1)
-        total = bs.get("real_estate_total_m_yen")
-        if not isinstance(total, (int, float)):
-            total = round(sum(f.get("book_value_total_m_yen") or 0 for f in facilities), 1)
-        cache[code] = {
-            "name": c.get("name"), "industry": c.get("industry") or "",
-            "sec_code": (c.get("sec_code") or "")[:4],
-            "land_book": land, "total_book": total,
-            "gap": lease.get("gap"), "lease_book": lease.get("book"),
-            "fv_ratio": lease.get("fv_ratio"),
-            "n_fac": len(facilities),
-            "top_fac": (facilities[0].get("name") if facilities else ""),
-            "top_loc": (facilities[0].get("location_raw") if facilities else ""),
-            "checked": dt.date.today().isoformat(),
-        }
+        cache[c["edinet_code"]] = entry
         n += 1
         if n % 10 == 0:
             save_json(RE_CACHE, cache)
@@ -578,6 +615,8 @@ def main():
                     help="深掘りする企業(名前・証券コード・EDINETコード)。複数指定可")
     ap.add_argument("--no-text", action="store_true", help="有報テキストのシグナル検出を省略(1社あたり1回節約)")
     ap.add_argument("--screen", action="store_true", help="スクリーナーモード(無料枠の範囲で少しずつ全社調査)")
+    ap.add_argument("--refresh-top", type=int, default=0,
+                    help="シグナル該当社+ランキング上位N社のデータを取り直す")
     ap.add_argument("--budget", type=int, default=DAILY_LIMIT, help=f"今日使ってよいAPI回数の上限(既定{DAILY_LIMIT})")
     ap.add_argument("--open", action="store_true", help="終了後にレポートを開く")
     args = ap.parse_args()
@@ -608,12 +647,15 @@ def main():
             print(f"台帳取り込みJSON: {imp_path}")
             reports.append(report)
 
+    if args.refresh_top:
+        refresh_top(args.refresh_top)
+
     if args.screen:
         r = screen()
         if r:
             reports.append(r)
 
-    if not args.company and not args.screen:
+    if not args.company and not args.screen and not args.refresh_top:
         ap.print_help()
         return
 

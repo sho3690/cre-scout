@@ -147,11 +147,11 @@ def scan_text(text: str) -> dict:
             continue
         snippets = []
         start = 0
-        for _ in range(2):  # 抜粋は最大2件
+        for _ in range(2):  # 抜粋は最大2件(前後の文脈を広めに)
             pos = text.find(kw, start)
             if pos < 0:
                 break
-            s = WS_RE.sub(" ", text[max(0, pos - 30): pos + len(kw) + 40]).strip()
+            s = WS_RE.sub(" ", text[max(0, pos - 60): pos + len(kw) + 90]).strip()
             snippets.append(s)
             start = pos + len(kw)
         hits[kw] = {"count": count, "snippets": snippets}
@@ -243,6 +243,16 @@ def build_report(dates: list, hits: list, checked: int) -> Path:
     return out
 
 
+LATIN_NOISE_RE = re.compile(r"[A-Za-z_:.\"']{6,}")
+
+
+def clean_passage(s: str, limit: int = 170) -> str:
+    """XBRLタグ名などの英字ノイズを除き、引用として読める形に整える"""
+    s = LATIN_NOISE_RE.sub(" ", str(s or ""))
+    s = re.sub(r"[\s　]+", " ", s).strip()
+    return s[:limit]
+
+
 def export_disclosures_js(new_hits: list):
     """直近14日分のヒットを蓄積して、アプリの「発掘」タブ用データを書き出す"""
     cache_file = TOOL_DIR / "cache" / "disclosure_hits.json"
@@ -251,6 +261,9 @@ def export_disclosures_js(new_hits: list):
     except (FileNotFoundError, json.JSONDecodeError):
         cache = {}
     for h in new_hits:
+        top_kws = sorted(h["hits"].items(), key=lambda i: -i[1]["count"])[:4]
+        passages = {k: [p for p in (clean_passage(s) for s in v["snippets"][:2]) if p]
+                    for k, v in top_kws}
         cache[h["docID"]] = {
             "docID": h["docID"], "filerName": h["filerName"],
             "secCode": (h.get("secCode") or "")[:4],
@@ -259,6 +272,7 @@ def export_disclosures_js(new_hits: list):
             "keywords": {k: v["count"] for k, v in h["hits"].items()},
             "snippet": next((s for v in sorted(h["hits"].values(),
                              key=lambda x: -x["count"]) for s in v["snippets"][:1]), ""),
+            "passages": passages,
             "total": h["total"],
         }
     cutoff = (dt.date.today() - dt.timedelta(days=14)).isoformat()

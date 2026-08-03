@@ -213,6 +213,7 @@ main.container { padding: 40px 24px 64px; display: grid; gap: 24px; }
 .report-shell { max-width: 860px; width: 100%; }
 .report-actions { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 12px; }
 .report-actions .btn { background: var(--surface); }
+.report-actions .btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; }
 .report-sheet {
   background: #fff; color: #1A1A1C; border-radius: 6px; box-shadow: var(--shadow-md);
   padding: 40px 44px; font-size: 13.5px; line-height: 1.7;
@@ -332,6 +333,10 @@ function fmtM(m) {
   return `${Math.round(m * 100).toLocaleString("ja-JP")}万円`;
 }
 const fmtDate = dt => (dt || "").slice(5, 10).replace("-", "/");
+// EDINETの原典PDFへの公開直リンク
+const edinetPdf = id => id
+  ? `https://disclosure2dl.edinet-fsa.go.jp/searchdocument/pdf/${encodeURIComponent(id)}.pdf`
+  : "";
 
 const THEME_KEY = "creScout.theme";
 const PICKS_KEY = "creScout.picks.v1";
@@ -429,9 +434,12 @@ function renderList() {
       : "";
     const subParts = [];
     if (e.industry) subParts.push(esc(e.industry));
-    if (e.sig) subParts.push(`提出 ${esc(fmtDate(e.sig.submitDateTime))} — ${esc(trunc(e.sig.docDescription, 34))}`);
+    if (e.sig) subParts.push(`提出 ${esc(fmtDate(e.sig.submitDateTime))} — ` +
+      `<a href="${edinetPdf(e.sig.docID)}" target="_blank" rel="noopener" title="原典PDFを開く(EDINET)">${esc(trunc(e.sig.docDescription, 34))}</a>`);
     const re = e.re;
-    const reLine = re ? `<div class="re-line">${re.gap != null ? `含み益 <b>${fmtM(re.gap)}</b> / ` : ""}土地簿価 <b>${fmtM(re.land_book)}</b>${re.top_fac ? ` — ${esc(trunc(re.top_fac, 20))} ${esc(trunc(re.top_loc || "", 14))}${re.n_fac > 1 ? ` ほか${re.n_fac}件` : ""}` : ""}</div>` : "";
+    const reSrc = (re?.doc_id && !e.sig)
+      ? ` <a href="${edinetPdf(re.doc_id)}" target="_blank" rel="noopener" title="原典PDFを開く(EDINET)">原典</a>` : "";
+    const reLine = re ? `<div class="re-line">${re.gap != null ? `含み益 <b>${fmtM(re.gap)}</b> / ` : ""}土地簿価 <b>${fmtM(re.land_book)}</b>${re.top_fac ? ` — ${esc(trunc(re.top_fac, 20))} ${esc(trunc(re.top_loc || "", 14))}${re.n_fac > 1 ? ` ほか${re.n_fac}件` : ""}` : ""}${reSrc}</div>` : "";
     return `<tr>
       <td class="r num">${i + 1}</td>
       <td>
@@ -504,53 +512,76 @@ function reportParts(e) {
   return { reasons, angles, dive };
 }
 
+function sourceLinks(e) {
+  const links = [];
+  if (e.sig?.docID) links.push({
+    label: `${e.sig.docDescription}(EDINET 書類ID ${e.sig.docID})`,
+    url: edinetPdf(e.sig.docID) });
+  if (e.re?.doc_id && e.re.doc_id !== e.sig?.docID) links.push({
+    label: `有価証券報告書 — 賃貸等不動産注記・設備状況の掲載書類(EDINET 書類ID ${e.re.doc_id})`,
+    url: edinetPdf(e.re.doc_id) });
+  return links;
+}
+
 function reportHTML(e) {
   const { reasons, angles, dive } = reportParts(e);
   const today = new Date();
   const dateJa = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
-  const sigRows = e.sig
-    ? Object.entries(e.sig.keywords || {}).sort((a, b) => b[1] - a[1])
-        .map(([k, n]) => `<tr><td>${esc(k)}</td><td class="r">${n}</td></tr>`).join("")
-    : "";
-  const snip = e.sig ? cleanSnippet(e.sig.snippet) : "";
   const re = e.re;
-  const props = (dive?.properties || []).slice(0, 6).map(p => `
-    <tr><td>${esc(p.type)}</td><td>${esc(p.location)}</td>
-    <td class="r">${esc(p.area || "—")}</td><td class="r">${fmtM(p.book)}</td></tr>`).join("");
-  return `
-    <div class="rs-band"><span class="rs-title">候補企業レポート</span><span class="rs-date">作成日: ${dateJa} / CRE Scout(自動生成)</span></div>
-    <div class="rs-company">${esc(e.name)}${e.sec ? ` <span style="font-weight:400;color:#757578">(証券コード ${esc(e.sec)})</span>` : ""}</div>
-    <div class="rs-meta">${esc(e.industry || "業種不明")}${e.sig ? ` / 根拠開示: ${esc(e.sig.docDescription)}(EDINET 書類ID ${esc(e.sig.docID)})` : ""}</div>
+  const secs = [];
+  const sec = (title, body) => secs.push({ title, body });
 
-    <div class="rs-sec"><h4>01 選定理由</h4>
-      <ul>${reasons.map(r => `<li>${esc(r)}</li>`).join("")}</ul></div>
+  sec("選定理由", `<ul>${reasons.map(r => `<li>${esc(r)}</li>`).join("")}</ul>`);
 
-    ${re ? `<div class="rs-sec"><h4>02 不動産データ(有価証券報告書より機械抽出)</h4>
+  if (re) {
+    const props = (dive?.properties || []).slice(0, 6).map(p => `
+      <tr><td>${esc(p.type)}</td><td>${esc(p.location)}</td>
+      <td class="r">${esc(p.area || "—")}</td><td class="r">${fmtM(p.book)}</td></tr>`).join("");
+    sec("不動産データ(有価証券報告書より機械抽出)", `
       <div class="rs-stats">
         <div class="rs-stat"><div class="l">含み益(賃貸等不動産注記)</div><div class="v">${fmtM(re.gap)}</div></div>
         <div class="rs-stat"><div class="l">注記簿価</div><div class="v">${fmtM(re.lease_book)}</div></div>
         <div class="rs-stat"><div class="l">土地簿価(BS)</div><div class="v">${fmtM(re.land_book)}</div></div>
         <div class="rs-stat"><div class="l">設備簿価計</div><div class="v">${fmtM(re.total_book)}</div></div>
       </div>
-      ${props ? `<table class="rs-table"><thead><tr><th>種別(推定)</th><th>物件・所在地</th><th class="r">面積</th><th class="r">帳簿価額</th></tr></thead><tbody>${props}</tbody></table>` : ""}
-    </div>` : ""}
+      ${props ? `<table class="rs-table"><thead><tr><th>種別(推定)</th><th>物件・所在地</th><th class="r">面積</th><th class="r">帳簿価額</th></tr></thead><tbody>${props}</tbody></table>` : ""}`);
+  }
 
-    ${e.sig ? `<div class="rs-sec"><h4>${re ? "03" : "02"} 開示シグナルの内訳</h4>
+  if (e.sig) {
+    const sigRows = Object.entries(e.sig.keywords || {}).sort((a, b) => b[1] - a[1])
+      .map(([k, n]) => `<tr><td>${esc(k)}</td><td class="r">${n}</td></tr>`).join("");
+    const passages = e.sig.passages || {};
+    let quotes = Object.entries(passages).slice(0, 3).map(([k, arr]) =>
+      (arr || []).slice(0, 2).map(p =>
+        `<div class="rs-snip"><b>${esc(k)}</b> — 「…${esc(p)}…」</div>`).join("")).join("");
+    if (!quotes && e.sig.snippet) {
+      quotes = `<div class="rs-snip">本文抜粋: …${esc(trunc(cleanSnippet(e.sig.snippet), 160))}…</div>`;
+    }
+    sec("開示シグナルの内訳と本文の記載箇所", `
       <table class="rs-table"><thead><tr><th>検出キーワード</th><th class="r">出現回数</th></tr></thead>
-      <tbody>${sigRows}</tbody></table>
-      ${snip ? `<div class="rs-snip">本文抜粋: …${esc(trunc(snip, 160))}…</div>` : ""}</div>` : ""}
+      <tbody>${sigRows}</tbody></table>${quotes}`);
+  }
 
-    <div class="rs-sec"><h4>${e.sig && re ? "04" : "03"} 想定される提案の切り口</h4>
-      <ul>${angles.map(a => `<li>${esc(a)}</li>`).join("")}</ul></div>
+  const links = sourceLinks(e);
+  if (links.length) {
+    sec("原典資料(クリックでEDINETのPDFを開く)", `<ul>${links.map(l =>
+      `<li><a href="${l.url}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`).join("")}</ul>`);
+  }
 
-    <div class="rs-sec"><h4>${e.sig && re ? "05" : "04"} 商談前に確認すべきこと</h4>
-      <ul>
-        <li>EDINETの原典${e.sig ? `(書類ID ${esc(e.sig.docID)})` : ""}で該当記載の文脈を確認する</li>
-        <li>対象不動産の特定(登記事項・所在地・公示地価・現地の状況)</li>
-        <li>決算期・借換え・中期経営計画などのタイミング要素</li>
-        <li>未公表情報に触れない(本レポートは公開開示のみに基づく)</li>
-      </ul></div>
+  sec("想定される提案の切り口", `<ul>${angles.map(a => `<li>${esc(a)}</li>`).join("")}</ul>`);
 
+  sec("商談前に確認すべきこと", `<ul>
+    <li>上記の原典PDFで該当記載の文脈を確認する</li>
+    <li>対象不動産の特定(登記事項・所在地・公示地価・現地の状況)</li>
+    <li>決算期・借換え・中期経営計画などのタイミング要素</li>
+    <li>未公表情報に触れない(本レポートは公開開示のみに基づく)</li>
+  </ul>`);
+
+  return `
+    <div class="rs-band"><span class="rs-title">候補企業レポート</span><span class="rs-date">作成日: ${dateJa} / CRE Scout(自動生成)</span></div>
+    <div class="rs-company">${esc(e.name)}${e.sec ? ` <span style="font-weight:400;color:#757578">(証券コード ${esc(e.sec)})</span>` : ""}</div>
+    <div class="rs-meta">${esc(e.industry || "業種不明")}</div>
+    ${secs.map((s, i) => `<div class="rs-sec"><h4>${String(i + 1).padStart(2, "0")} ${s.title}</h4>${s.body}</div>`).join("")}
     <div class="rs-foot">本レポートは公開情報(EDINET / EDINET DB)の機械抽出により自動生成された参考資料です。
     数値は概算であり、正確性を保証しません。売買の勧誘・投資助言ではありません。
     商談化の際はインサイダー情報の取扱いにご注意ください。</div>`;
@@ -572,6 +603,8 @@ function reportText(e) {
   if (e.sig) lines.push("■開示シグナル",
     `・${Object.entries(e.sig.keywords || {}).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}×${n}`).join("、")}`,
     `・出典: ${e.sig.docDescription}(EDINET ${e.sig.docID})`, "");
+  const links = sourceLinks(e);
+  if (links.length) lines.push("■原典資料", ...links.map(l => `・${l.url}`), "");
   lines.push("■提案の切り口", ...angles.map(a => `・${a}`), "",
     "※公開情報の機械抽出による自動生成。数値は概算・要原典確認。");
   return lines.filter(l => l !== null).join("\n");
@@ -597,6 +630,7 @@ const App = {
         e.re?.top_fac ? `${e.re.top_fac} ${e.re.top_loc || ""}` : ""].filter(Boolean).join(" / "),
       date: e.sig ? (e.sig.submitDateTime || "").slice(0, 10) : (e.re?.checked || ""),
       source: [e.sig ? `EDINET ${e.sig.docID}` : "", e.re ? "EDINET DB" : ""].filter(Boolean).join(" / "),
+      url: edinetPdf(e.sig?.docID || e.re?.doc_id),
     });
     savePicks(); render();
     this.toast(`「${e.name}」を候補リストに追加しました`);
@@ -642,8 +676,8 @@ const App = {
   },
   _csv() {
     const q = s => `"${String(s ?? "").replace(/"/g, '""')}"`;
-    const head = ["企業名", "証券コード", "種別", "シグナル・指標", "詳細", "日付", "出典"];
-    const rows = picks.map(p => [p.name, p.sec, p.type, p.signal, p.detail, p.date, p.source]
+    const head = ["企業名", "証券コード", "種別", "シグナル・指標", "詳細", "日付", "出典", "原典URL"];
+    const rows = picks.map(p => [p.name, p.sec, p.type, p.signal, p.detail, p.date, p.source, p.url || ""]
       .map(q).join(","));
     return "\uFEFF" + [head.map(q).join(","), ...rows].join("\r\n");
   },
