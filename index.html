@@ -173,11 +173,17 @@ main { padding: 28px 0 64px; display: grid; gap: 24px; }
 }
 .pick-chip button:hover { color: var(--error); background: var(--error-muted); }
 
-/* ============ 補足 ============ */
-.note-details { font-size: .8125rem; color: var(--text-secondary); }
-.note-details summary { cursor: pointer; font-weight: 700; color: var(--text-primary); }
-.note-details[open] summary { margin-bottom: 10px; }
-.note-details li { margin: 4px 0 4px 1.2em; }
+/* ============ 選出基準(最上部) ============ */
+.criteria-card { border-left: 4px solid var(--accent-strong); background: var(--subtle-blue); padding: 20px 24px; }
+.criteria-card > h2 { font-size: .9375rem; }
+.crit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 24px; margin-top: 10px; }
+.crit-item p { font-size: .78rem; color: var(--text-secondary); line-height: 1.7; }
+.crit-item b { color: var(--text-primary); }
+.crit-label { font-size: .75rem; font-weight: 700; color: var(--primary); margin-bottom: 2px; }
+.dark .crit-label { color: var(--accent-strong); }
+.crit-src { font-size: .72rem; color: var(--text-muted); margin-top: 12px;
+  border-top: 1px solid var(--border); padding-top: 10px; }
+.crit-src b { color: var(--text-secondary); }
 .empty { text-align: center; padding: 40px 24px; color: var(--text-muted); font-size: .875rem; }
 .help { font-size: .75rem; color: var(--text-muted); }
 .app-foot { padding: 24px; text-align: center; font-size: .72rem; color: var(--text-muted); line-height: 1.8; }
@@ -263,6 +269,32 @@ main { padding: 28px 0 64px; display: grid; gap: 24px; }
 </header>
 
 <main class="container" id="main-content">
+  <section class="card criteria-card" aria-labelledby="h-criteria">
+    <h2 id="h-criteria">このリストの選出基準</h2>
+    <div class="crit-grid">
+      <div class="crit-item">
+        <div class="crit-label">基準1: 開示シグナル</div>
+        <p>EDINETに提出された有価証券報告書・臨時報告書の<b>本文</b>から、売却の予兆となる13語
+        (減損損失 / 閉鎖 / 統廃合 / 拠点統合 / 本社移転 / 遊休 / 撤退 / リースバック /
+        固定資産の譲渡・売却 / 構造改革 / 事業再編 / 資本効率)の出現を検出。
+        直近2週間・投資信託等は除外。</p>
+      </div>
+      <div class="crit-item">
+        <div class="crit-label">基準2: 含み益</div>
+        <p>有価証券報告書「賃貸等不動産」注記の<b>時価 − 帳簿価額</b>。
+        開示している約2,000社が対象(不動産業=プロの保有者は除外)。
+        全上場企業 約3,800社を毎朝約90社ずつ自動調査。</p>
+      </div>
+      <div class="crit-item">
+        <div class="crit-label">並び順</div>
+        <p>① 基準1と2の<b>両方が揃う企業</b>(青バッジ) → ② シグナル検出企業(出現回数順)
+        → ③ 含み益上位企業。シグナル検出企業は不動産データを優先調査します。</p>
+      </div>
+    </div>
+    <p class="crit-src"><b>出典:</b> EDINET(金融庁) / EDINET DB(edinetdb.jp) — 毎朝8:00に自動更新。
+    数値は機械抽出の概算のため、商談前に必ず原典(EDINETの開示書類)をご確認ください。</p>
+  </section>
+
   <div id="picksWrap"></div>
 
   <section class="card" aria-labelledby="h-list">
@@ -271,28 +303,10 @@ main { padding: 28px 0 64px; display: grid; gap: 24px; }
     <div id="listWrap"></div>
   </section>
 
-  <section class="card">
-    <details class="note-details">
-      <summary>検出条件について</summary>
-      <ul>
-        <li><b>新着開示シグナル</b> — 上場企業がEDINETに提出した報告書の本文を毎朝読み、
-          「減損損失 / 閉鎖 / 統廃合 / 本社移転 / 遊休 / 撤退 / リースバック / 固定資産の譲渡・売却 /
-          構造改革 / 事業再編 / 資本効率」の出現回数を数えて多い順に表示します。
-          投資信託・ファンド関連の開示は除外しています。</li>
-        <li><b>含み益</b> — 有価証券報告書の「賃貸等不動産」注記にある
-          <b>時価 − 帳簿価額</b>。開示している約2,000社が対象で、不動産業(プロの保有者)は除外しています。</li>
-        <li><b>並び順</b> — ①シグナル+含み益の両方が揃う企業 → ②シグナル検出企業(検出数順)
-          → ③含み益上位企業、の順。シグナル検出企業は不動産データを優先的に自動調査します。</li>
-        <li>調査は無料APIの範囲で毎朝自動で進み、対象企業(約3,800社)を約40日で一巡します。</li>
-        <li>数値は機械抽出の概算です。<b>商談前に必ず原典(EDINETの開示書類)を確認してください。</b></li>
-      </ul>
-    </details>
-  </section>
 </main>
 
 <footer class="app-foot container">
-  出典: EDINET(金融庁) / EDINET DB — データは毎朝8:00に自動更新されます。<br>
-  本サイトは公開情報の整理であり、売買の勧誘・助言ではありません。
+  本サイトは公開情報の整理であり、売買の勧誘・投資助言ではありません。
 </footer>
 
 <div id="reportRoot"></div>
