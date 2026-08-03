@@ -3,6 +3,6 @@
 cd "$(dirname "$0")"
 echo "EDINET DBから企業不動産データを調べています(数分かかることがあります)..."
 python3 tools/edinetdb_scan.py --screen
-open "file://$(pwd)/index.html#sourcing"
+open "file://$(pwd)/index.html"
 echo ""
 echo "終わりました。このウィンドウは閉じてかまいません。"
