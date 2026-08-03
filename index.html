@@ -141,31 +141,14 @@ main.container { padding: 40px 24px 64px; display: grid; gap: 24px; }
   border-radius: 999px; padding: 1px 9px; margin: 2px 4px 2px 0; }
 .dark .kw { color: var(--accent-strong); }
 .kw b { font-family: var(--font-mono); }
-.badge-added {
-  display: inline-flex; align-items: center; font-size: .75rem; font-weight: 700;
-  padding: 3px 10px; border-radius: 999px;
-  background: var(--success-muted); color: var(--success); white-space: nowrap;
-}
+.row-actions { display: flex; gap: 8px; justify-content: flex-end; align-items: center; flex-wrap: nowrap; }
+.row-actions .btn { white-space: nowrap; }
+a.btn { text-decoration: none; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn svg { flex-shrink: 0; }
 .progress { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 0 0 14px; }
 .progress > div { height: 100%; background: var(--primary); border-radius: 3px; }
 .dark .progress > div { background: var(--accent); }
-
-/* ============ 候補リスト ============ */
-.picks { border: 1px solid var(--accent-strong); border-left-width: 4px; }
-.picks-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.picks-head h2 { font-size: 1rem; font-weight: 700; }
-.picks-head .spacer { flex: 1; }
-.picks-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-.pick-chip {
-  display: inline-flex; align-items: center; gap: 6px; font-size: .78rem;
-  background: var(--subtle-blue); color: var(--text-primary);
-  border-radius: 999px; padding: 3px 6px 3px 12px;
-}
-.pick-chip button {
-  border: none; background: none; cursor: pointer; color: var(--text-muted);
-  font-size: .9rem; line-height: 1; padding: 2px 5px; border-radius: 999px; font-family: inherit;
-}
-.pick-chip button:hover { color: var(--error); background: var(--error-muted); }
 
 /* ============ 選出基準(最上部) ============ */
 .criteria-card { border-left: 4px solid var(--accent-strong); background: var(--subtle-blue); padding: 20px 24px; }
@@ -290,8 +273,6 @@ main.container { padding: 40px 24px 64px; display: grid; gap: 24px; }
     数値は機械抽出の概算のため、商談前に必ず原典(EDINETの開示書類)をご確認ください。</p>
   </section>
 
-  <div id="picksWrap"></div>
-
   <section class="card" aria-labelledby="h-list">
     <h2 id="h-list">発掘リスト</h2>
     <p class="desc" id="listDesc">開示シグナル(直近2週間)と含み益データを企業ごとに統合。両方が揃う企業ほど上位に表示します。</p>
@@ -339,13 +320,6 @@ const edinetPdf = id => id
   : "";
 
 const THEME_KEY = "creScout.theme";
-const PICKS_KEY = "creScout.picks.v1";
-
-let picks = [];
-try { picks = JSON.parse(localStorage.getItem(PICKS_KEY)) || []; } catch {}
-function savePicks() {
-  try { localStorage.setItem(PICKS_KEY, JSON.stringify(picks)); } catch {}
-}
 
 /* ============ データ整形(企業単位に統合) ============ */
 const D = window.CRE_DISCLOSURES;
@@ -395,25 +369,14 @@ const LEADS = (() => {
 const leadTier = e => (e.sig && e.re && e.re.gap != null) ? 0 : e.sig ? 1 : 2;
 
 /* ============ 描画 ============ */
-function renderPicks() {
-  const el = $("picksWrap");
-  if (!picks.length) { el.innerHTML = ""; return; }
-  const chips = picks.map((p, i) => `
-    <span class="pick-chip">${esc(p.name)}
-      <button onclick="App.removePick(${i})" aria-label="${esc(p.name)}をリストから外す" title="リストから外す">×</button>
-    </span>`).join("");
-  el.innerHTML = `
-    <section class="card picks" aria-label="候補リスト">
-      <div class="picks-head">
-        <h2>候補リスト <span class="num">${picks.length}</span>社</h2>
-        <span class="spacer"></span>
-        <button class="btn btn-sm" onclick="App.copyCSV()">CSVをコピー</button>
-        <button class="btn btn-sm" onclick="App.downloadCSV()">CSVをダウンロード</button>
-        <button class="btn btn-sm btn-ghost" onclick="App.clearPicks()">クリア</button>
-      </div>
-      <div class="picks-chips">${chips}</div>
-      <p class="help" style="margin-top:10px">お使いの管理ツール(スプレッドシート・CRM等)に貼り付けて使えます。リストはこのブラウザ内に保存されます。</p>
-    </section>`;
+const ICON_DOC = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`;
+const ICON_REPORT = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>`;
+
+// 開示書類の種別に応じたボタンラベル(臨時報告書・半期報告書もあるため)
+function docLabel(e) {
+  const d = e.sig?.docDescription || "";
+  const m = d.match(/有価証券報告書|半期報告書|臨時報告書/);
+  return m ? m[0] : "有価証券報告書";
 }
 
 function renderList() {
@@ -426,7 +389,6 @@ function renderList() {
     el.innerHTML = `<div class="empty">まだデータがありません。毎朝8:00の自動調査をお待ちください。</div>`;
     return;
   }
-  const names = new Set(picks.map(p => p.name));
   const rows = LEADS.map((e, i) => {
     const kws = e.sig
       ? Object.entries(e.sig.keywords || {}).sort((a, b) => b[1] - a[1]).slice(0, 5)
@@ -434,12 +396,10 @@ function renderList() {
       : "";
     const subParts = [];
     if (e.industry) subParts.push(esc(e.industry));
-    if (e.sig) subParts.push(`提出 ${esc(fmtDate(e.sig.submitDateTime))} — ` +
-      `<a href="${edinetPdf(e.sig.docID)}" target="_blank" rel="noopener" title="原典PDFを開く(EDINET)">${esc(trunc(e.sig.docDescription, 34))}</a>`);
+    if (e.sig) subParts.push(`提出 ${esc(fmtDate(e.sig.submitDateTime))} — ${esc(trunc(e.sig.docDescription, 34))}`);
     const re = e.re;
-    const reSrc = (re?.doc_id && !e.sig)
-      ? ` <a href="${edinetPdf(re.doc_id)}" target="_blank" rel="noopener" title="原典PDFを開く(EDINET)">原典</a>` : "";
-    const reLine = re ? `<div class="re-line">${re.gap != null ? `含み益 <b>${fmtM(re.gap)}</b> / ` : ""}土地簿価 <b>${fmtM(re.land_book)}</b>${re.top_fac ? ` — ${esc(trunc(re.top_fac, 20))} ${esc(trunc(re.top_loc || "", 14))}${re.n_fac > 1 ? ` ほか${re.n_fac}件` : ""}` : ""}${reSrc}</div>` : "";
+    const reLine = re ? `<div class="re-line">${re.gap != null ? `含み益 <b>${fmtM(re.gap)}</b> / ` : ""}土地簿価 <b>${fmtM(re.land_book)}</b>${re.top_fac ? ` — ${esc(trunc(re.top_fac, 20))} ${esc(trunc(re.top_loc || "", 14))}${re.n_fac > 1 ? ` ほか${re.n_fac}件` : ""}` : ""}</div>` : "";
+    const docUrl = edinetPdf(e.sig?.docID || re?.doc_id);
     return `<tr>
       <td class="r num">${i + 1}</td>
       <td>
@@ -448,12 +408,12 @@ function renderList() {
         ${kws ? `<div style="margin-top:5px">${kws}</div>` : ""}
         ${reLine}
       </td>
-      <td class="r" style="white-space:nowrap">
-        <button class="btn btn-sm btn-ghost" onclick="App.openReport(${i})">レポート</button>
-        ${names.has(e.name)
-          ? '<span class="badge-added">リスト済</span>'
-          : `<button class="btn btn-sm" onclick="App.addLead(${i})">リストに追加</button>`}
-      </td>
+      <td class="r"><div class="row-actions">
+        ${docUrl
+          ? `<a class="btn btn-sm" href="${docUrl}" target="_blank" rel="noopener" title="原典PDFを開く(EDINET)">${ICON_DOC}${docLabel(e)}</a>`
+          : `<button class="btn btn-sm" disabled title="書類IDは今後の自動調査で取得されます">${ICON_DOC}${docLabel(e)}</button>`}
+        <button class="btn btn-sm" onclick="App.openReport(${i})">${ICON_REPORT}レポート</button>
+      </div></td>
     </tr>`;
   }).join("");
   el.innerHTML = `
@@ -464,7 +424,6 @@ function renderList() {
 }
 
 function render() {
-  renderPicks();
   renderList();
 }
 
@@ -614,27 +573,6 @@ function reportText(e) {
 let toastTimer = null;
 let reportIdx = null;
 const App = {
-  addLead(i) {
-    const e = LEADS[i];
-    if (!e || picks.some(p => p.name === e.name)) return;
-    const parts = [];
-    if (e.sig) parts.push(Object.entries(e.sig.keywords || {}).sort((a, b) => b[1] - a[1])
-      .map(([k, n]) => `${k}×${n}`).join("、"));
-    if (e.re?.gap != null) parts.push(`含み益 ${fmtM(e.re.gap)}`);
-    if (e.re) parts.push(`土地簿価 ${fmtM(e.re.land_book)}`);
-    picks.push({
-      name: e.name, sec: e.sec,
-      type: leadTier(e) === 0 ? "シグナル+含み益" : e.sig ? "新着開示" : "含み益",
-      signal: parts.join(" / "),
-      detail: [e.industry, e.sig?.docDescription,
-        e.re?.top_fac ? `${e.re.top_fac} ${e.re.top_loc || ""}` : ""].filter(Boolean).join(" / "),
-      date: e.sig ? (e.sig.submitDateTime || "").slice(0, 10) : (e.re?.checked || ""),
-      source: [e.sig ? `EDINET ${e.sig.docID}` : "", e.re ? "EDINET DB" : ""].filter(Boolean).join(" / "),
-      url: edinetPdf(e.sig?.docID || e.re?.doc_id),
-    });
-    savePicks(); render();
-    this.toast(`「${e.name}」を候補リストに追加しました`);
-  },
   openReport(i) {
     const e = LEADS[i];
     if (!e) return;
@@ -664,43 +602,6 @@ const App = {
       ta.select(); document.execCommand("copy"); ta.remove();
     }
     this.toast("レポートをテキストでコピーしました");
-  },
-  removePick(i) {
-    picks.splice(i, 1);
-    savePicks(); render();
-  },
-  clearPicks() {
-    picks = [];
-    savePicks(); render();
-    this.toast("候補リストを空にしました");
-  },
-  _csv() {
-    const q = s => `"${String(s ?? "").replace(/"/g, '""')}"`;
-    const head = ["企業名", "証券コード", "種別", "シグナル・指標", "詳細", "日付", "出典", "原典URL"];
-    const rows = picks.map(p => [p.name, p.sec, p.type, p.signal, p.detail, p.date, p.source, p.url || ""]
-      .map(q).join(","));
-    return "\uFEFF" + [head.map(q).join(","), ...rows].join("\r\n");
-  },
-  async copyCSV() {
-    const text = this._csv();
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      const ta = document.createElement("textarea");
-      ta.value = text; document.body.appendChild(ta);
-      ta.select(); document.execCommand("copy"); ta.remove();
-    }
-    this.toast(`${picks.length}社をCSV形式でコピーしました`);
-  },
-  downloadCSV() {
-    const blob = new Blob([this._csv()], { type: "text/csv" });
-    const a = document.createElement("a");
-    const d = new Date();
-    a.href = URL.createObjectURL(blob);
-    a.download = `cre-scout-候補-${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}.csv`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-    this.toast("CSVをダウンロードしました");
   },
   toggleTheme() {
     const dark = document.documentElement.classList.toggle("dark");
