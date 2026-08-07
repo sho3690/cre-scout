@@ -4153,5 +4153,35 @@
   "top_fac": "山の手店",
   "top_loc": "札幌市西区",
   "checked": "2026-08-05"
+ },
+ "E01256": {
+  "name": "新日本電工株式会社",
+  "industry": "鉄鋼",
+  "sec_code": "5563",
+  "land_book": 5329.0,
+  "total_book": 12722.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100XUK7",
+  "n_fac": 14,
+  "top_fac": "徳島工場・研究所",
+  "top_loc": "徳島県阿南市",
+  "checked": "2026-08-07"
+ },
+ "E00990": {
+  "name": "株式会社資生堂",
+  "industry": "化学",
+  "sec_code": "4911",
+  "land_book": 23586.0,
+  "total_book": 134305.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100XSCU",
+  "n_fac": 9,
+  "top_fac": "大阪茨木工場",
+  "top_loc": "大阪府茨木市",
+  "checked": "2026-08-07"
  }
 }
