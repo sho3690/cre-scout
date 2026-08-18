@@ -11968,5 +11968,35 @@
   "top_fac": "エージェント・インシュアランス・グループ本社",
   "top_loc": "東京都新宿区",
   "checked": "2026-08-16"
+ },
+ "E36431": {
+  "name": "株式会社ベビーカレンダー",
+  "industry": "サービス業",
+  "sec_code": "7363",
+  "land_book": 0,
+  "total_book": 0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100YNQ1",
+  "n_fac": 5,
+  "top_fac": "本社",
+  "top_loc": "東京都渋谷区",
+  "checked": "2026-08-18"
+ },
+ "E35941": {
+  "name": "株式会社ヘッドウォータース",
+  "industry": "情報・通信業",
+  "sec_code": "4011",
+  "land_book": 0,
+  "total_book": 0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100XUSL",
+  "n_fac": 5,
+  "top_fac": "本社",
+  "top_loc": "東京都新宿区",
+  "checked": "2026-08-18"
  }
 }
