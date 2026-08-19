@@ -11998,5 +11998,50 @@
   "top_fac": "本社",
   "top_loc": "東京都新宿区",
   "checked": "2026-08-18"
+ },
+ "E24129": {
+  "name": "株式会社大光",
+  "industry": "卸売業",
+  "sec_code": "3160",
+  "land_book": 1900.0,
+  "total_book": 6652.1,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100WJ4B",
+  "n_fac": 6,
+  "top_fac": "本社兼物流センター",
+  "top_loc": "岐阜県大垣市",
+  "checked": "2026-08-19"
+ },
+ "E04857": {
+  "name": "東洋テック株式会社",
+  "industry": "サービス業",
+  "sec_code": "9686",
+  "land_book": 5973.4,
+  "total_book": 10462.2,
+  "gap": 646.7,
+  "lease_book": 6654.3,
+  "fv_ratio": 1.1,
+  "doc_id": "S100YCTH",
+  "n_fac": 8,
+  "top_fac": "本社",
+  "top_loc": "大阪市浪速区 他",
+  "checked": "2026-08-19"
+ },
+ "E05713": {
+  "name": "Ａｂａｌａｎｃｅ株式会社",
+  "industry": "情報・通信業",
+  "sec_code": "3856",
+  "land_book": 2524.0,
+  "total_book": 7431.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100W9LG",
+  "n_fac": 4,
+  "top_fac": "バローズ本社",
+  "top_loc": "大阪府吹田市",
+  "checked": "2026-08-19"
  }
 }
