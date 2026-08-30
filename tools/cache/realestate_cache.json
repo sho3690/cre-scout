@@ -13348,5 +13348,50 @@
   "top_fac": "本社",
   "top_loc": "東京都港区",
   "checked": "2026-08-29"
+ },
+ "E05450": {
+  "name": "Ｓｈｉｎｗａ　Ｗｉｓｅ　Ｈｏｌｄｉｎｇｓ株式会社",
+  "industry": "サービス業",
+  "sec_code": "2437",
+  "land_book": 36.9,
+  "total_book": 79.4,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100WM4T",
+  "n_fac": 1,
+  "top_fac": "本社",
+  "top_loc": "東京都千代田区",
+  "checked": "2026-08-30"
+ },
+ "E04064": {
+  "name": "株式会社プロパスト",
+  "industry": "不動産業",
+  "sec_code": "3236",
+  "land_book": 0,
+  "total_book": 0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100WLW2",
+  "n_fac": 1,
+  "top_fac": "本社",
+  "top_loc": "東京都港区",
+  "checked": "2026-08-30"
+ },
+ "E41784": {
+  "name": "ＧＯ株式会社",
+  "industry": "情報・通信業",
+  "sec_code": "581A",
+  "land_book": 0,
+  "total_book": 208.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": null,
+  "n_fac": 0,
+  "top_fac": "",
+  "top_loc": "",
+  "checked": "2026-08-30"
  }
 }
