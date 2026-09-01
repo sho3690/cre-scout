@@ -13393,5 +13393,20 @@
   "top_fac": "",
   "top_loc": "",
   "checked": "2026-08-30"
+ },
+ "E01059": {
+  "name": "コタ株式会社",
+  "industry": "化学",
+  "sec_code": "4923",
+  "land_book": 2079.7,
+  "total_book": 2079.7,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100VZ8E",
+  "n_fac": 4,
+  "top_fac": "本社・物流倉庫　他",
+  "top_loc": "京都府久世郡久御山町",
+  "checked": "2026-09-01"
  }
 }
