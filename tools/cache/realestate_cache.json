@@ -13498,5 +13498,20 @@
   "top_fac": "本社",
   "top_loc": "東京都中央区",
   "checked": "2026-09-04"
+ },
+ "E22995": {
+  "name": "メディアスホールディングス株式会社",
+  "industry": "卸売業",
+  "sec_code": "3154",
+  "land_book": 3987.1,
+  "total_book": 11015.1,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100WQP5",
+  "n_fac": 10,
+  "top_fac": "㈱アルバース本社、支店",
+  "top_loc": "東京都中央区他",
+  "checked": "2026-09-05"
  }
 }
