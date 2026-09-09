@@ -13543,5 +13543,35 @@
   "top_fac": "熊本構造計画研究所",
   "top_loc": "熊本県菊池郡　大津町",
   "checked": "2026-09-06"
+ },
+ "E02664": {
+  "name": "新光商事株式会社",
+  "industry": "卸売業",
+  "sec_code": "8141",
+  "land_book": 648.0,
+  "total_book": 979.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100YME7",
+  "n_fac": 3,
+  "top_fac": "本社",
+  "top_loc": "東京都品川区",
+  "checked": "2026-09-09"
+ },
+ "E40060": {
+  "name": "Ｔｅｒｒａ　Ｄｒｏｎｅ株式会社",
+  "industry": "情報・通信業",
+  "sec_code": "278A",
+  "land_book": 0,
+  "total_book": 6.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100XY8O",
+  "n_fac": 1,
+  "top_fac": "本社",
+  "top_loc": "東京都渋谷区",
+  "checked": "2026-09-09"
  }
 }
