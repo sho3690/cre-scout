@@ -13933,5 +13933,35 @@
   "top_fac": "本社",
   "top_loc": "東京都港区",
   "checked": "2026-09-13"
+ },
+ "E02047": {
+  "name": "株式会社石井表記",
+  "industry": "機械",
+  "sec_code": "6336",
+  "land_book": 1800.0,
+  "total_book": 2718.0,
+  "gap": 174.0,
+  "lease_book": 708.0,
+  "fv_ratio": 1.25,
+  "doc_id": "S100Y0EE",
+  "n_fac": 8,
+  "top_fac": "本社工場",
+  "top_loc": "広島県福山市神辺町",
+  "checked": "2026-09-15"
+ },
+ "E02065": {
+  "name": "株式会社ＯＳＧコーポレーション",
+  "industry": "電気機器",
+  "sec_code": "6757",
+  "land_book": 680.2,
+  "total_book": 1504.4,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100Y0OW",
+  "n_fac": 10,
+  "top_fac": "本社",
+  "top_loc": "大阪市北区",
+  "checked": "2026-09-15"
  }
 }
