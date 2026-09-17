@@ -14233,5 +14233,50 @@
   "top_fac": "七日市工場",
   "top_loc": "岡山市北区",
   "checked": "2026-09-16"
+ },
+ "E00396": {
+  "name": "宝ホールディングス株式会社",
+  "industry": "食料品",
+  "sec_code": "2531",
+  "land_book": 23345.0,
+  "total_book": 65154.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100YINV",
+  "n_fac": 11,
+  "top_fac": "本社他",
+  "top_loc": "京都市下京区他",
+  "checked": "2026-09-17"
+ },
+ "E00462": {
+  "name": "ハウス食品グループ本社株式会社",
+  "industry": "食料品",
+  "sec_code": "2810",
+  "land_book": 28552.0,
+  "total_book": 68304.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100YD7A",
+  "n_fac": 28,
+  "top_fac": "東京本社",
+  "top_loc": "東京都千代田区",
+  "checked": "2026-09-17"
+ },
+ "E02398": {
+  "name": "株式会社キングジム",
+  "industry": "その他製品",
+  "sec_code": "7962",
+  "land_book": 1570.0,
+  "total_book": 3459.9,
+  "gap": 1228.3,
+  "lease_book": 418.2,
+  "fv_ratio": 3.94,
+  "doc_id": "S100WOZY",
+  "n_fac": 6,
+  "top_fac": "本社",
+  "top_loc": "東京都千代田区",
+  "checked": "2026-09-17"
  }
 }
