@@ -16648,5 +16648,20 @@
   "top_fac": "東京本社",
   "top_loc": "東京都千代田区",
   "checked": "2026-10-02"
+ },
+ "E00550": {
+  "name": "株式会社ダイドーリミテッド",
+  "industry": "繊維製品",
+  "sec_code": "3205",
+  "land_book": 154.0,
+  "total_book": 5227.0,
+  "gap": 25500.0,
+  "lease_book": 3774.0,
+  "fv_ratio": 7.76,
+  "doc_id": "S100YMAI",
+  "n_fac": 1,
+  "top_fac": "オフィスビル不 動 産賃    貸",
+  "top_loc": "東京都       文京区",
+  "checked": "2026-10-03"
  }
 }
