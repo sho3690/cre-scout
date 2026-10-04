@@ -16663,5 +16663,20 @@
   "top_fac": "オフィスビル不 動 産賃    貸",
   "top_loc": "東京都       文京区",
   "checked": "2026-10-03"
+ },
+ "E40194": {
+  "name": "ハンワホームズ株式会社",
+  "industry": "建設業",
+  "sec_code": "275A",
+  "land_book": 59.9,
+  "total_book": 59.9,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100Y55S",
+  "n_fac": 4,
+  "top_fac": "本社",
+  "top_loc": "大阪府泉南市",
+  "checked": "2026-10-04"
  }
 }
