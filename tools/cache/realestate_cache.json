@@ -16678,5 +16678,20 @@
   "top_fac": "本社",
   "top_loc": "大阪府泉南市",
   "checked": "2026-10-04"
+ },
+ "E00667": {
+  "name": "株式会社リヒトラブ",
+  "industry": "その他製品",
+  "sec_code": "7975",
+  "land_book": 2750.4,
+  "total_book": 5562.8,
+  "gap": 4124.7,
+  "lease_book": 3122.0,
+  "fv_ratio": 2.32,
+  "doc_id": "S100Y4MZ",
+  "n_fac": 8,
+  "top_fac": "静岡事業部",
+  "top_loc": "静岡県菊川市",
+  "checked": "2026-10-06"
  }
 }
