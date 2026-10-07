@@ -16693,5 +16693,20 @@
   "top_fac": "静岡事業部",
   "top_loc": "静岡県菊川市",
   "checked": "2026-10-06"
+ },
+ "E01677": {
+  "name": "株式会社瑞光",
+  "industry": "機械",
+  "sec_code": "6279",
+  "land_book": 6653.0,
+  "total_book": 15721.2,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100Y3PF",
+  "n_fac": 11,
+  "top_fac": "本社工場",
+  "top_loc": "大阪府茨木市",
+  "checked": "2026-10-07"
  }
 }
