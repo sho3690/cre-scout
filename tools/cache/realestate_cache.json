@@ -16708,5 +16708,20 @@
   "top_fac": "本社工場",
   "top_loc": "大阪府茨木市",
   "checked": "2026-10-07"
+ },
+ "E02376": {
+  "name": "株式会社ミロク",
+  "industry": "その他製品",
+  "sec_code": "7983",
+  "land_book": 2538.3,
+  "total_book": 6282.3,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100XHE6",
+  "n_fac": 4,
+  "top_fac": "本社",
+  "top_loc": "高知県南国市",
+  "checked": "2026-10-08"
  }
 }
