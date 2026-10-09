@@ -16723,5 +16723,20 @@
   "top_fac": "本社",
   "top_loc": "高知県南国市",
   "checked": "2026-10-08"
+ },
+ "E01020": {
+  "name": "ハリマ化成グループ株式会社",
+  "industry": "化学",
+  "sec_code": "4410",
+  "land_book": 9187.0,
+  "total_book": 15865.0,
+  "gap": 679.0,
+  "lease_book": 839.0,
+  "fv_ratio": 1.81,
+  "doc_id": "S100YEIE",
+  "n_fac": 8,
+  "top_fac": "ハリマ化成㈱加古川製造所内",
+  "top_loc": "兵庫県加古川市",
+  "checked": "2026-10-09"
  }
 }
