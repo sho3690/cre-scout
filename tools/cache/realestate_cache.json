@@ -18283,5 +18283,35 @@
   "top_fac": "本社",
   "top_loc": "東京都渋谷区",
   "checked": "2026-10-21"
+ },
+ "E02646": {
+  "name": "中部水産株式会社",
+  "industry": "卸売業",
+  "sec_code": "8145",
+  "land_book": 2316.0,
+  "total_book": 2316.0,
+  "gap": 745.7,
+  "lease_book": 2668.5,
+  "fv_ratio": 1.28,
+  "doc_id": "S100YI2J",
+  "n_fac": 9,
+  "top_fac": "本社",
+  "top_loc": "名古屋市熱田区",
+  "checked": "2026-10-22"
+ },
+ "E05378": {
+  "name": "株式会社プラネット",
+  "industry": "サービス業",
+  "sec_code": "2391",
+  "land_book": 0,
+  "total_book": 0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100WW9E",
+  "n_fac": 1,
+  "top_fac": "本社",
+  "top_loc": "東京都港区",
+  "checked": "2026-10-22"
  }
 }
