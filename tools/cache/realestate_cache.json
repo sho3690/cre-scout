@@ -18313,5 +18313,20 @@
   "top_fac": "本社",
   "top_loc": "東京都港区",
   "checked": "2026-10-22"
+ },
+ "E36484": {
+  "name": "ビジョナル株式会社",
+  "industry": "情報・通信業",
+  "sec_code": "4194",
+  "land_book": 0,
+  "total_book": 2035.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100WW0V",
+  "n_fac": 2,
+  "top_fac": "本社",
+  "top_loc": "東京都渋谷区",
+  "checked": "2026-10-23"
  }
 }
