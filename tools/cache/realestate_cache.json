@@ -19333,5 +19333,50 @@
   "top_fac": "本社",
   "top_loc": "東京都新宿区",
   "checked": "2026-11-01"
+ },
+ "E02753": {
+  "name": "株式会社　植松商会",
+  "industry": "卸売業",
+  "sec_code": "9914",
+  "land_book": 123.2,
+  "total_book": 167.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100YDBK",
+  "n_fac": 15,
+  "top_fac": "本社",
+  "top_loc": "仙台市若林区",
+  "checked": "2026-11-03"
+ },
+ "E02826": {
+  "name": "株式会社アドヴァン",
+  "industry": "卸売業",
+  "sec_code": "7463",
+  "land_book": 24237.2,
+  "total_book": 35657.3,
+  "gap": -62.0,
+  "lease_book": 7296.5,
+  "fv_ratio": 0.99,
+  "doc_id": "S100YM3U",
+  "n_fac": 11,
+  "top_fac": "岩井流通センター",
+  "top_loc": "茨城県坂東市",
+  "checked": "2026-11-03"
+ },
+ "E00922": {
+  "name": "住友ファーマ株式会社",
+  "industry": "医薬品",
+  "sec_code": "4506",
+  "land_book": 1458.0,
+  "total_book": 24643.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100YH3M",
+  "n_fac": 7,
+  "top_fac": "鈴鹿工場",
+  "top_loc": "三重県鈴鹿市",
+  "checked": "2026-11-03"
  }
 }
