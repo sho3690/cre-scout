@@ -19453,5 +19453,35 @@
   "top_fac": "太陽光発電所",
   "top_loc": "和歌山県岩出市",
   "checked": "2026-11-04"
+ },
+ "E01204": {
+  "name": "株式会社鶴弥",
+  "industry": "ガラス・土石製品",
+  "sec_code": "5386",
+  "land_book": 8125.9,
+  "total_book": 8125.9,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100YD8C",
+  "n_fac": 7,
+  "top_fac": "阿久比工場",
+  "top_loc": "愛知県知多郡阿久比町",
+  "checked": "2026-11-05"
+ },
+ "E05090": {
+  "name": "株式会社さくらケーシーエス",
+  "industry": "情報・通信業",
+  "sec_code": "4761",
+  "land_book": 927.0,
+  "total_book": 1689.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100YEEF",
+  "n_fac": 6,
+  "top_fac": "本社",
+  "top_loc": "神戸市中央区",
+  "checked": "2026-11-05"
  }
 }
