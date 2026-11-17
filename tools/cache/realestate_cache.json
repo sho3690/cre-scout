@@ -28948,5 +28948,35 @@
   "top_fac": "㈱リケン柏崎事業所",
   "top_loc": "新潟県柏崎市",
   "checked": "2026-11-16"
+ },
+ "E00590": {
+  "name": "株式会社ワコールホールディングス",
+  "industry": "繊維製品",
+  "sec_code": "3591",
+  "land_book": 12046.0,
+  "total_book": 32361.0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100YKJC",
+  "n_fac": 12,
+  "top_fac": "本社",
+  "top_loc": "京都市南区",
+  "checked": "2026-11-17"
+ },
+ "E02073": {
+  "name": "ダイコク電機株式会社",
+  "industry": "機械",
+  "sec_code": "6430",
+  "land_book": 6617.4,
+  "total_book": 11287.8,
+  "gap": 2032.0,
+  "lease_book": 816.7,
+  "fv_ratio": 3.49,
+  "doc_id": "S100YGWC",
+  "n_fac": 19,
+  "top_fac": "坂下事業所",
+  "top_loc": "愛知県春日井市",
+  "checked": "2026-11-17"
  }
 }
