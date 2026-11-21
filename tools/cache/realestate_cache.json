@@ -29098,5 +29098,50 @@
   "top_fac": "埼玉工場",
   "top_loc": "埼玉県加須市",
   "checked": "2026-11-18"
+ },
+ "E00600": {
+  "name": "ヤマトインターナショナル株式会社",
+  "industry": "繊維製品",
+  "sec_code": "8127",
+  "land_book": 5179.1,
+  "total_book": 6521.4,
+  "gap": 2798.2,
+  "lease_book": 3900.6,
+  "fv_ratio": 1.72,
+  "doc_id": "S100ZIO4",
+  "n_fac": 6,
+  "top_fac": "［－］日本橋ビル",
+  "top_loc": "東京都中央区",
+  "checked": "2026-11-21"
+ },
+ "E00617": {
+  "name": "株式会社クラウディアホールディングス",
+  "industry": "繊維製品",
+  "sec_code": "3607",
+  "land_book": 2394.4,
+  "total_book": 4931.4,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100X5IQ",
+  "n_fac": 5,
+  "top_fac": "クラウディアコスチュームサービス 本社他",
+  "top_loc": "京都市右京区",
+  "checked": "2026-11-21"
+ },
+ "E02478": {
+  "name": "ミクロン精密株式会社",
+  "industry": "機械",
+  "sec_code": "6159",
+  "land_book": 739.3,
+  "total_book": 2102.1,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100X5M8",
+  "n_fac": 4,
+  "top_fac": "みはらし工場",
+  "top_loc": "山形県上山市",
+  "checked": "2026-11-21"
  }
 }
