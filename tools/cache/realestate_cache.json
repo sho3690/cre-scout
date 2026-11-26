@@ -29218,5 +29218,20 @@
   "top_fac": "関東工場",
   "top_loc": "千葉県浦安市",
   "checked": "2026-11-25"
+ },
+ "E01734": {
+  "name": "株式会社エヌ・ピー・シー",
+  "industry": "機械",
+  "sec_code": "6255",
+  "land_book": 1548.0,
+  "total_book": 2704.6,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100X6PR",
+  "n_fac": 2,
+  "top_fac": "松山工場",
+  "top_loc": "愛媛県松山市",
+  "checked": "2026-11-26"
  }
 }
