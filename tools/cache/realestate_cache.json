@@ -29248,5 +29248,20 @@
   "top_fac": "本社",
   "top_loc": "東京都渋谷区",
   "checked": "2026-11-27"
+ },
+ "E40398": {
+  "name": "株式会社ＴＥＮＴＩＡＬ",
+  "industry": "小売業",
+  "sec_code": "325A",
+  "land_book": 0,
+  "total_book": 0,
+  "gap": null,
+  "lease_book": null,
+  "fv_ratio": null,
+  "doc_id": "S100X6TZ",
+  "n_fac": 9,
+  "top_fac": "本社",
+  "top_loc": "東京都品川区",
+  "checked": "2026-11-28"
  }
 }
